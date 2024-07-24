@@ -12,6 +12,7 @@ import 'package:at_follows_flutter/services/connections_service.dart';
 import 'package:at_follows_flutter/services/sdk_service.dart';
 import 'package:at_follows_flutter/utils/app_constants.dart';
 import 'package:flutter_test/flutter_test.dart';
+
 import '../at_demo_credentials.dart' as demo_data;
 
 SDKService _sdkService = SDKService();
@@ -151,8 +152,8 @@ void main() {
           connectionProvider.connectionslistStatus.isFollowingPrivate, false);
       var result = await _connectionsService.changeListPublicStatus(true, true);
       expect(result, true);
-      expect(_connectionsService.following.getKey!.atKey.metadata.isPublic,
-          false);
+      expect(
+          _connectionsService.following.getKey!.atKey.metadata.isPublic, false);
     });
     test('change from private to public', () async {
       await _connectionsService.getAtsignsList();
@@ -257,8 +258,8 @@ void main() {
           _connectionsService.following.getKey!.atKey.metadata.isPublic, true);
       var result = await _connectionsService.changeListPublicStatus(true, true);
       expect(result, true);
-      expect(_connectionsService.following.getKey!.atKey.metadata.isPublic,
-          false);
+      expect(
+          _connectionsService.following.getKey!.atKey.metadata.isPublic, false);
     });
 
     test('change liststatus from private to public', () async {
@@ -270,8 +271,8 @@ void main() {
         ..metadata = atMetadata;
       await _sdkService.put(atKey1, '@sameeraja🛠,@sitaram🛠');
       await _connectionsService.getAtsignsList();
-      expect(_connectionsService.following.getKey!.atKey.metadata.isPublic,
-          false);
+      expect(
+          _connectionsService.following.getKey!.atKey.metadata.isPublic, false);
 
       var result =
           await _connectionsService.changeListPublicStatus(true, false);
@@ -287,9 +288,10 @@ Future<void> tearDownFunc() async {
   }
 }
 
-Future<AtClientService> setUpFunc(String atsign) async {
+Future<AtAuthService> setUpFunc(String atsign) async {
   final atClientManager = AtClientManager.getInstance();
-  AtClientService atClientService = AtClientService();
+  AtAuthService atClientService =
+      AtClientMobile.authService(atsign, getAtSignPreference(atsign));
   final atClient = atClientManager.atClient;
   atClientManager.atClient.syncService.sync();
   await setEncryptionKeys(atClient, atsign);

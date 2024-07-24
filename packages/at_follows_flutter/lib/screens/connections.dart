@@ -18,7 +18,7 @@ import 'package:provider/provider.dart';
 ///To enable darkTheme set [isDarkTheme] as true.
 class Connections extends StatefulWidget {
   ///Perform operations like follow/following for a particular @sign.
-  final AtClientService atClientserviceInstance;
+  final AtAuthService atClientserviceInstance;
 
   ///color to match with your app theme. Defaults to [orange].
   final Color? appColor;
@@ -28,12 +28,14 @@ class Connections extends StatefulWidget {
 
   ///atsign to follow from webapp.
   final String? followAtsignTitle;
+
   // final bool isLightTheme;
   Connections(
       {required this.atClientserviceInstance,
       this.appColor,
       this.followAtsignTitle,
       this.followerAtsignTitle});
+
   @override
   _ConnectionsState createState() => _ConnectionsState();
 }
@@ -44,15 +46,16 @@ class _ConnectionsState extends State<Connections> {
   TextEditingController searchController = TextEditingController();
   ConnectionProvider _connectionProvider = ConnectionProvider();
   var _connectionService = ConnectionsService();
+
   // String followAtsignTitle;
   // String followerAtsignTitle;
 
   @override
   void initState() {
-    String currentAtsign = (widget
-            .atClientserviceInstance.atClientManager.atClient
-            .getCurrentAtSign()) ??
-        '';
+    String currentAtsign =
+        (AtClientManager.getInstance().atClient.getCurrentAtSign()) != null
+            ? AtClientManager.getInstance().atClient.getCurrentAtSign()!
+            : '';
     _connectionService.init(currentAtsign);
     _connectionProvider.init(currentAtsign);
     ColorConstants.darkTheme = false;
@@ -253,5 +256,6 @@ class ConnectionTab {
   bool isActive;
   String name;
   int? count;
+
   ConnectionTab({this.isActive = false, required this.name});
 }

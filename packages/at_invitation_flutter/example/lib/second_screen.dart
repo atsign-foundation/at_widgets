@@ -17,7 +17,6 @@ class SecondScreen extends StatefulWidget {
 
 class _SecondScreenState extends State<SecondScreen> {
   final AtSignLogger _logger = AtSignLogger('Second Screen');
-  AtClientService? atClientService;
   String activeAtSign = '';
   GlobalKey<NavigatorState> scaffoldKey = GlobalKey();
   String chatWithAtSign = '';
@@ -30,6 +29,7 @@ class _SecondScreenState extends State<SecondScreen> {
 
   /// Get the AtClientManager instance
   var atClientManager = AtClientManager.getInstance();
+
   @override
   void initState() {
     initializeInvitationWidget();

@@ -1,12 +1,12 @@
 import 'dart:convert';
+import 'dart:core';
 
+import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_login_flutter/domain/at_login_model.dart';
 import 'package:at_login_flutter/exceptions/at_login_exceptions.dart';
 import 'package:at_login_flutter/utils/app_constants.dart';
-import 'package:at_login_flutter/utils/strings.dart';
-import 'package:at_client_mobile/at_client_mobile.dart';
-import 'dart:core';
 import 'package:at_login_flutter/utils/at_login_utils.dart';
+import 'package:at_login_flutter/utils/strings.dart';
 import 'package:at_server_status/at_server_status.dart';
 import 'package:at_utils/at_utils.dart';
 import 'package:crypton/crypton.dart';
@@ -194,8 +194,8 @@ class AtLoginService {
   }
 
   Future<List<String>> getAtsignList() async {
-    var atSignsList = await KeychainUtil.getAtsignList();
-    if (atSignsList == null) atSignsList = [];
+    var atSignsList =
+        await KeyChainManager.getInstance().getAtSignListFromKeychain();
     return atSignsList;
   }
 }

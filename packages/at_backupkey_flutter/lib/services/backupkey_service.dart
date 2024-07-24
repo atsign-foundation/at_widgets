@@ -10,13 +10,14 @@ class BackUpKeyService {
   }
 
   static Future<String?> _getAESKey(String atsign) async {
-    return await KeychainUtil.getAESKey(atsign);
+    return (await KeyChainManager.getInstance().readAtsign(name: atsign))
+        ?.selfEncryptionKey;
   }
 
   static Future<Map<String, String>> getEncryptedKeys(String atsign) async {
     Map<String, String> result;
     try {
-      result = await KeychainUtil.getEncryptedKeys(atsign);
+      result = await KeyChainManager.getInstance().getEncryptedKeys(atsign);
       result[atsign] = await _getAESKey(atsign) ?? '';
     } catch (e) {
       result = {};

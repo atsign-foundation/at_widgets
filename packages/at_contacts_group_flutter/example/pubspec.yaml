@@ -31,8 +31,7 @@ dependencies:
   # at_contacts_flutter: ^4.0.0
   at_app_flutter: ^5.2.0
   at_backupkey_flutter: ^4.0.10
-
-  at_client_mobile: ^3.2.15
+  at_client_mobile: ^3.2.17
   at_contacts_flutter: ^4.0.14
   at_contacts_group_flutter:
     # When depending on this package from a real application you should use:

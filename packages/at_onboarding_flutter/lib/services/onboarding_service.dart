@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'dart:convert';
 
+import 'package:at_auth/at_auth.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_app_constants.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_response_status.dart';
@@ -12,6 +14,7 @@ class OnboardingService {
   static final OnboardingService _singleton = OnboardingService._internal();
 
   OnboardingService._internal();
+
   factory OnboardingService.getInstance() {
     return _singleton;
   }
@@ -21,8 +24,7 @@ class OnboardingService {
       AtStatusImpl(rootUrl: AtOnboardingConstants.serverDomain);
   final AtSignLogger _logger = AtSignLogger('Onboarding Service');
 
-  Map<String?, AtClientService> atClientServiceMap =
-      <String?, AtClientService>{};
+  Map<String?, AtAuthService> atClientServiceMap = <String?, AtAuthService>{};
   String? _atsign;
   AtClientPreference _atClientPreference = AtClientPreference();
 
@@ -34,6 +36,7 @@ class OnboardingService {
   ServerStatus? serverStatus;
 
   set setLogo(Widget? logo) => _applogo = logo;
+
   Widget? get logo => _applogo;
 
   bool? get isPkam => _isPkam;
@@ -47,7 +50,9 @@ class OnboardingService {
   AtClientPreference get atClientPreference => _atClientPreference;
 
   set namespace(String namespace) => _namespace = namespace;
+
   String? get appNamespace => _namespace;
+
   set setAtsign(String? atsign) {
     atsign = formatAtSign(atsign);
     _atsign = atsign;
@@ -57,6 +62,7 @@ class OnboardingService {
 
   // next route set from using app
   Widget? _nextScreen;
+
   set setNextScreen(Widget? nextScreen) {
     _nextScreen = nextScreen;
   }
@@ -65,11 +71,12 @@ class OnboardingService {
 
   Widget? get nextScreen => _nextScreen;
 
-  AtClientService? _getClientServiceForAtsign(String? atsign) {
+  AtAuthService? _getClientServiceForAtsign(String? atsign) {
     if (atClientServiceMap.containsKey(atsign)) {
       return atClientServiceMap[atsign];
     }
-    AtClientService service = AtClientService();
+    AtAuthService service =
+        AtClientMobile.authService(atsign!, atClientPreference);
     return service;
   }
 
@@ -91,14 +98,17 @@ class OnboardingService {
 
   /// Returns `true` if authentication is successful for the existing atsign in device.
   Future<bool> onboard() async {
-    AtClientService atClientServiceInstance =
-        _getClientServiceForAtsign(_atsign)!;
-    bool result = await atClientServiceInstance.onboard(
-        atClientPreference: _atClientPreference, atsign: _atsign);
+    AtAuthService atAuthService = _getClientServiceForAtsign(_atsign)!;
+
+    AtOnboardingRequest atOnboardingRequest = AtOnboardingRequest(_atsign!)
+      ..rootDomain = _atClientPreference.rootDomain
+      ..rootPort = _atClientPreference.rootPort;
+
+    AtOnboardingResponse atOnboardingResponse =
+        await atAuthService.onboard(atOnboardingRequest);
     _atsign ??= await getAtSign();
-    atClientServiceMap.putIfAbsent(_atsign, () => atClientServiceInstance);
-    await _sync(_atsign);
-    return result;
+    atClientServiceMap.putIfAbsent(_atsign, () => atAuthService);
+    return atOnboardingResponse.isSuccessful;
   }
 
   /// Returns `false` if fails in authenticating [atsign] with [cramSecret]/[privateKey].
@@ -125,19 +135,26 @@ class OnboardingService {
         }
         return c.future;
       }
-      AtClientService atClientService = _getClientServiceForAtsign(atsign)!;
+      AtAuthService atAuthService = _getClientServiceForAtsign(atsign)!;
       _atClientPreference.cramSecret = cramSecret;
       if (cramSecret != null) {
         _atClientPreference.privateKey = null;
       }
-      bool isAuthenticated = await atClientService.authenticate(
-          atsign, _atClientPreference,
-          jsonData: jsonData, decryptKey: decryptKey, status: status);
-      if (isAuthenticated) {
+
+      AtAuthRequest atAuthRequest = AtAuthRequest(atsign)
+        ..rootDomain = _atClientPreference.rootDomain
+        ..rootPort = _atClientPreference.rootPort;
+
+      if (jsonData != null) {
+        atAuthRequest.encryptedKeysMap = jsonDecode(jsonData);
+      }
+
+      AtAuthResponse atAuthResponse =
+          await atAuthService.authenticate(atAuthRequest);
+      if (atAuthResponse.isSuccessful) {
         _atsign = atsign;
-        atClientServiceMap.putIfAbsent(_atsign, () => atClientService);
+        atClientServiceMap.putIfAbsent(_atsign, () => atAuthService);
         c.complete(AtOnboardingResponseStatus.authSuccess);
-        await _sync(_atsign);
       }
     } catch (e) {
       _logger.severe('error in authenticating =>  ${e.toString()}');
@@ -154,22 +171,23 @@ class OnboardingService {
 
   /// Fetches privatekey for [atsign] from device keychain.
   Future<String?> getPrivateKey(String atsign) async {
-    return KeychainUtil.getPkamPrivateKey(atsign);
+    return await KeyChainManager.getInstance().getPkamPrivateKey(atsign);
   }
 
   /// Fetches publickey for [atsign] from device keychain.
   Future<String?> getPublicKey(String atsign) async {
-    return KeychainUtil.getPkamPublicKey(atsign);
+    return await KeyChainManager.getInstance().getPkamPublicKey(atsign);
   }
 
   /// Fetches AESkey for [atsign] from device keychain.
   Future<String?> getAESKey(String atsign) async {
-    return KeychainUtil.getAESKey(atsign);
+    return KeyChainManager.getInstance().getSelfEncryptionAESKey(atsign);
   }
 
   /// Fetches encryption keys for [atsign] from device keychain.
   Future<Map<String, String?>> getEncryptedKeys(String atsign) async {
-    Map<String, String?> result = await KeychainUtil.getEncryptedKeys(atsign);
+    Map<String, String?> result =
+        await KeyChainManager.getInstance().getEncryptedKeys(atsign);
     result[atsign] = await getAESKey(atsign);
     return result;
   }
@@ -232,12 +250,6 @@ class OnboardingService {
       setAtsign = atsign;
     }
     return result;
-  }
-
-  /// sync call to get data from secondary
-  Future<void> _sync(String? atSign) async {
-    // ignore: deprecated_member_use
-    _getClientServiceForAtsign(atSign)!.atClientManager.syncService.sync();
   }
 
   /// enables sharing onboarded atSign with multiple atApps

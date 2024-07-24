@@ -44,8 +44,7 @@ class ChatService {
   String? groupChatId;
   List<String>? groupChatMembers = [];
 
-  StreamController<List<Message>> chatStreamController =
-      StreamController<List<Message>>.broadcast();
+  StreamController<List<Message>> chatStreamController = StreamController<List<Message>>.broadcast();
 
   Sink get chatSink => chatStreamController.sink;
 
@@ -56,10 +55,7 @@ class ChatService {
   }
 
   /// function to set parameters passed from the calling app
-  void initChatService(
-      AtClientManager atClientManagerFromApp,
-      String currentAtSignFromApp,
-      String rootDomainFromApp,
+  void initChatService(AtClientManager atClientManagerFromApp, String currentAtSignFromApp, String rootDomainFromApp,
       int rootPortFromApp) async {
     atClientManager = atClientManagerFromApp;
     currentAtSign = currentAtSignFromApp;
@@ -75,9 +71,7 @@ class ChatService {
       AtClientManager.getInstance()
           .atClient
           .notificationService
-          .subscribe(
-              regex: atClientManager.atClient.getPreferences()!.namespace ?? '',
-              shouldDecrypt: true)
+          .subscribe(regex: atClientManager.atClient.getPreferences()!.namespace ?? '', shouldDecrypt: true)
           .listen((AtNotification notification) {
         _notificationCallback(notification);
       });
@@ -88,7 +82,7 @@ class ChatService {
 
   ///Fetches privatekey for [atsign] from device keychain.
   Future<String> getPrivateKey(String atsign) async {
-    var str = await KeychainUtil.getPrivateKey(atsign);
+    var str = await KeyChainManager.getInstance().getPkamPrivateKey(atsign);
     return str!;
   }
 
@@ -108,8 +102,7 @@ class ChatService {
     notificationKey.replaceFirst(fromAtsign, '');
     notificationKey.trim();
 
-    if (((notificationKey.startsWith(chatKey) ||
-                notificationKey.startsWith(chatImageKey)) &&
+    if (((notificationKey.startsWith(chatKey) || notificationKey.startsWith(chatImageKey)) &&
             fromAtsign == chatWithAtSign) ||
         (isGroupChat &&
             (notificationKey.startsWith(chatKey + groupChatId!) ||
@@ -118,15 +111,13 @@ class ChatService {
       var decryptedMessage = response.value;
       if (decryptedMessage != null) {
         chatHistoryMessagesOther = json.decode(decryptedMessage) as List;
-        chatHistory =
-            await interleave(chatHistoryMessages, chatHistoryMessagesOther);
+        chatHistory = await interleave(chatHistoryMessages, chatHistoryMessagesOther);
         chatSink.add(chatHistory);
       }
     }
   }
 
-  void setAtsignToChatWith(String? chatWithAtSignFromApp, bool isGroup,
-      String? groupId, List<String>? groupMembers) {
+  void setAtsignToChatWith(String? chatWithAtSignFromApp, bool isGroup, String? groupId, List<String>? groupMembers) {
     if (isGroup) {
       isGroupChat = isGroup;
       groupChatId = groupId;
@@ -149,9 +140,7 @@ class ChatService {
     try {
       chatHistory = [];
       var key = AtKey()
-        ..key = storageKey +
-            (isGroupChat ? groupChatId! : '') +
-            (chatWithAtSign ?? ' ').substring(1)
+        ..key = storageKey + (isGroupChat ? groupChatId! : '') + (chatWithAtSign ?? ' ').substring(1)
         ..sharedBy = currentAtSign!
         ..sharedWith = chatWithAtSign
         ..metadata = Metadata();
@@ -166,22 +155,19 @@ class ChatService {
         chatHistoryMessages = [];
       }
       // get received messages
-      key.key = storageKey +
-          (isGroupChat ? groupChatId! : '') +
-          (chatWithAtSign != null ? currentAtSign! : ' ').substring(1);
+      key.key =
+          storageKey + (isGroupChat ? groupChatId! : '') + (chatWithAtSign != null ? currentAtSign! : ' ').substring(1);
       key.sharedBy = chatWithAtSign;
       key.sharedWith = currentAtSign!;
       keyValue = await atClientManager.atClient.get(key).catchError((e) {
         return AtValue();
       });
       if (keyValue.value != null) {
-        chatHistoryMessagesOther =
-            json.decode((keyValue.value) as String) as List;
+        chatHistoryMessagesOther = json.decode((keyValue.value) as String) as List;
       } else {
         chatHistoryMessagesOther = [];
       }
-      chatHistory =
-          await interleave(chatHistoryMessages, chatHistoryMessagesOther);
+      chatHistory = await interleave(chatHistoryMessages, chatHistoryMessagesOther);
       chatSink.add(chatHistory);
     } catch (error) {
       chatSink.add(chatHistory);
@@ -251,9 +237,7 @@ class ChatService {
   Future<void> setChatHistory(Message message, {Uint8List? imageData}) async {
     try {
       var key = AtKey()
-        ..key = storageKey +
-            (isGroupChat ? groupChatId! : '') +
-            (chatWithAtSign ?? ' ').substring(1)
+        ..key = storageKey + (isGroupChat ? groupChatId! : '') + (chatWithAtSign ?? ' ').substring(1)
         ..sharedBy = currentAtSign!
         ..sharedWith = chatWithAtSign
         ..metadata = Metadata();
@@ -284,9 +268,7 @@ class ChatService {
   /// deletes self owned messages only
   Future<bool> deleteMessages() async {
     var key = AtKey()
-      ..key = storageKey +
-          (isGroupChat ? groupChatId! : '') +
-          (chatWithAtSign ?? ' ').substring(1)
+      ..key = storageKey + (isGroupChat ? groupChatId! : '') + (chatWithAtSign ?? ' ').substring(1)
       ..sharedBy = currentAtSign!
       ..sharedWith = chatWithAtSign
       ..metadata = Metadata();
@@ -296,16 +278,14 @@ class ChatService {
         var message = Message.fromJson(chatHistoryMessages[i]);
         if (message.contentType == MessageContentType.image) {
           // removing 'AtKey{' and ending '}'
-          var savedKey =
-              message.message?.substring(6, (message.message?.length ?? 1) - 1);
+          var savedKey = message.message?.substring(6, (message.message?.length ?? 1) - 1);
 
           var key = constructKey(savedKey ?? '');
           await atClientManager.atClient.delete(key);
         }
       }
       chatHistoryMessages = [];
-      var result = await atClientManager.atClient
-          .put(key, json.encode(chatHistoryMessages));
+      var result = await atClientManager.atClient.put(key, json.encode(chatHistoryMessages));
       await getChatHistory();
       return result;
     } catch (e) {
@@ -315,9 +295,7 @@ class ChatService {
 
   Future<bool> deleteSelectedMessage(String? id) async {
     var key = AtKey()
-      ..key = storageKey +
-          (isGroupChat ? groupChatId! : '') +
-          (chatWithAtSign ?? ' ').substring(1)
+      ..key = storageKey + (isGroupChat ? groupChatId! : '') + (chatWithAtSign ?? ' ').substring(1)
       ..sharedBy = currentAtSign!
       ..sharedWith = chatWithAtSign
       ..metadata = Metadata();
@@ -326,11 +304,9 @@ class ChatService {
     try {
       for (var i = 0; i < chatHistoryMessages.length; i++) {
         var message = Message.fromJson(chatHistoryMessages[i]);
-        if (message.id == id &&
-            message.contentType == MessageContentType.image) {
+        if (message.id == id && message.contentType == MessageContentType.image) {
           // removing 'AtKey{' and ending '}'
-          var savedKey =
-              message.message?.substring(6, (message.message?.length ?? 1) - 1);
+          var savedKey = message.message?.substring(6, (message.message?.length ?? 1) - 1);
           var key = constructKey(savedKey ?? '');
 
           await atClientManager.atClient.delete(key);
@@ -340,8 +316,7 @@ class ChatService {
         var message = Message.fromJson(e);
         return message.id == id;
       });
-      var result = await atClientManager.atClient
-          .put(key, json.encode(chatHistoryMessages));
+      var result = await atClientManager.atClient.put(key, json.encode(chatHistoryMessages));
       await getChatHistory();
       return result;
     } catch (e) {
@@ -354,13 +329,10 @@ class ChatService {
     var size = imageBytes.length;
     if (size > 512000) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text(
-              'Image exceeds the maximum limit of 512KB. Please try with an image of lower size.')));
+          content: Text('Image exceeds the maximum limit of 512KB. Please try with an image of lower size.')));
     } else {
       var key = AtKey()
-        ..key = chatImageKey +
-            (isGroupChat ? groupChatId! : '') +
-            DateTime.now().millisecondsSinceEpoch.toString()
+        ..key = chatImageKey + (isGroupChat ? groupChatId! : '') + DateTime.now().millisecondsSinceEpoch.toString()
         ..sharedBy = currentAtSign!
         ..sharedWith = chatWithAtSign
         ..metadata = Metadata();

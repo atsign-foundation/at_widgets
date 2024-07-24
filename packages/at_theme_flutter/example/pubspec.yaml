@@ -31,7 +31,7 @@ dependencies:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  at_client_mobile: ^3.2.15
+  at_client_mobile: ^3.2.17
   at_common_flutter: ^2.0.12
   at_onboarding_flutter: ^6.1.7
   at_theme_flutter:
@@ -44,6 +44,7 @@ dependencies:
 dependency_overrides:
   at_backupkey_flutter:
     path: ../../at_backupkey_flutter
+
 
 dev_dependencies:
   # The "flutter_lints" package below contains a set of recommended lints to

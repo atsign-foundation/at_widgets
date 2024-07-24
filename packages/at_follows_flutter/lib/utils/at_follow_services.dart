@@ -12,8 +12,7 @@ class AtFollowServices {
   var _connectionService = ConnectionsService();
   ConnectionProvider _connectionProvider = ConnectionProvider();
 
-  Future initializeFollowService(
-      AtClientService atClientserviceInstance) async {
+  Future initializeFollowService(AtAuthService atClientserviceInstance) async {
     _connectionService
         .init(AtClientManager.getInstance().atClient.getCurrentAtSign()!);
     _connectionProvider

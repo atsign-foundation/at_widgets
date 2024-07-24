@@ -22,7 +22,7 @@ class SDKService {
   String? _atsign;
 
   ///Sets the [rootdomain]
-  set setClientService(AtClientService service) {
+  set setClientService(AtAuthService service) {
     this._atsign = AtClientManager.getInstance().atClient.getCurrentAtSign();
     Strings.rootdomain =
         AtClientManager.getInstance().atClient.getPreferences()!.rootDomain;
@@ -32,9 +32,10 @@ class SDKService {
 
   ///Fetches privatekey for [atsign] from device keychain.
   Future<String?> getPrivateKey(String atsign) async {
-    return await KeychainUtil.getPkamPrivateKey(atsign).timeout(
-        Duration(seconds: AppConstants.responseTimeLimit),
-        onTimeout: () => _onTimeOut());
+    return await KeyChainManager.getInstance()
+        .getPkamPrivateKey(atsign)
+        .timeout(Duration(seconds: AppConstants.responseTimeLimit),
+            onTimeout: () => _onTimeOut());
   }
 
   ///Returns `true` on deleting [atKey].
