@@ -125,7 +125,7 @@ class _SecondScreenState extends State<SecondScreen> {
                             width: 50,
                             fit: BoxFit.cover,
                             gaplessPlayback: true,
-                            image: NetworkImage('https://source.unsplash.com/random'),
+                            image: NetworkImage('https://picsum.photos/200/300'),
                           ),
                         ),
                       )),
