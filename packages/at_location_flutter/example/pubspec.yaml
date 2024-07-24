@@ -28,7 +28,7 @@ environment:
 # versions available, run `flutter pub outdated`.
 dependencies:
   at_app_flutter: ^5.2.0
-  at_client_mobile: ^3.2.15
+  at_client_mobile: ^3.2.17
   at_location_flutter:
     # When depending on this package from a real application you should use:
     #   at_location_flutter: ^x.y.z

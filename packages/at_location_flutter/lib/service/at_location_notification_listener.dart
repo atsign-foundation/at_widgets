@@ -14,11 +14,11 @@ import 'package:at_location_flutter/service/master_location_service.dart';
 import 'package:at_location_flutter/utils/constants/colors.dart';
 import 'package:at_location_flutter/utils/constants/constants.dart';
 import 'package:at_location_flutter/utils/constants/init_location_service.dart';
+import 'package:at_utils/at_logger.dart';
 import 'package:flutter/material.dart';
 
 import 'request_location_service.dart';
 import 'sharing_location_service.dart';
-import 'package:at_utils/at_logger.dart';
 
 /// Starts monitor and listens for notifications related to this package.
 class AtLocationNotificationListener {
@@ -72,7 +72,7 @@ class AtLocationNotificationListener {
 
   ///Fetches privatekey for [atsign] from device keychain.
   Future<String?> getPrivateKey(String atsign) async {
-    return await KeychainUtil.getPrivateKey(atsign);
+    return await KeyChainManager.getInstance().getPkamPrivateKey(atsign);
   }
 
   /// filters out the received notification.

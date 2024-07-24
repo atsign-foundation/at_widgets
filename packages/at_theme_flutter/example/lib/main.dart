@@ -6,11 +6,13 @@ import 'package:at_onboarding_flutter/at_onboarding_flutter.dart'
     show AtOnboarding, AtOnboardingConfig, AtOnboardingResultStatus;
 import 'package:at_theme_flutter/at_theme_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart' show getApplicationSupportDirectory;
+import 'package:path_provider/path_provider.dart'
+    show getApplicationSupportDirectory;
 
 import 'src/pages/profile_page.dart';
 
-final StreamController<AppTheme> appThemeController = StreamController<AppTheme>.broadcast();
+final StreamController<AppTheme> appThemeController =
+    StreamController<AppTheme>.broadcast();
 
 Future<void> main() async {
   await AtEnv.load();
@@ -29,6 +31,7 @@ Future<AtClientPreference> loadAtClientPreference() async {
 
 class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
+
   @override
   State<MyApp> createState() => _MyAppState();
 }
@@ -37,7 +40,7 @@ class _MyAppState extends State<MyApp> {
   // * load the AtClientPreference in the background
   Future<AtClientPreference> futurePreference = loadAtClientPreference();
   AtClientPreference? atClientPreference;
-  AtClientService? atClientService;
+  AtAuthService? atClientService;
 
   @override
   Widget build(BuildContext context) {
@@ -79,13 +82,18 @@ class _MyAppState extends State<MyApp> {
                                   switch (result.status) {
                                     case AtOnboardingResultStatus.success:
                                       await Navigator.pushReplacement(
-                                          context, MaterialPageRoute(builder: (context) => const ProfilePage()));
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const ProfilePage()));
                                       break;
                                     case AtOnboardingResultStatus.error:
-                                      ScaffoldMessenger.of(context).showSnackBar(
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
                                         const SnackBar(
                                           backgroundColor: Colors.red,
-                                          content: Text('An error has occurred'),
+                                          content:
+                                              Text('An error has occurred'),
                                         ),
                                       );
                                       break;

@@ -3,17 +3,20 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
-import 'package:at_invitation_flutter/models/message_share.dart';
-import 'package:at_invitation_flutter/widgets/share_dialog.dart';
-import 'package:at_invitation_flutter/widgets/otp_dialog.dart';
-import 'package:flutter/material.dart';
+
 import 'package:at_client_mobile/at_client_mobile.dart';
-import 'package:uuid/uuid.dart';
+import 'package:at_invitation_flutter/models/message_share.dart';
+import 'package:at_invitation_flutter/widgets/otp_dialog.dart';
+import 'package:at_invitation_flutter/widgets/share_dialog.dart';
 import 'package:at_utils/at_logger.dart';
+import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
 
 class InvitationService {
   InvitationService._();
+
   static final InvitationService _instance = InvitationService._();
+
   factory InvitationService() => _instance;
 
   final AtSignLogger _logger = AtSignLogger('Invitation Service');
@@ -62,7 +65,7 @@ class InvitationService {
 
   ///Fetches privatekey for [atsign] from device keychain.
   Future<String> getPrivateKey(String atsign) async {
-    return await KeychainUtil.getPrivateKey(atsign) ?? '';
+    return await KeyChainManager.getInstance().getPkamPrivateKey(atsign) ?? '';
   }
 
   void _notificationCallback(dynamic notification) async {
