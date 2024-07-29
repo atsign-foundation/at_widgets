@@ -2,6 +2,7 @@
 
 - **FIX**: Resolved Static analysis messages
 - **CHORE**: Updated dependencies
+- **CHORE**: Updated kotlin version number
 
 ## 1.0.11:
 
