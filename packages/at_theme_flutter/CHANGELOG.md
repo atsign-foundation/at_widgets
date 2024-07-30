@@ -2,7 +2,7 @@
 
 - **CHORE**: Updated dependencies
 - **FIX**: Lint issues fixed
--
+- **CHORE**: Updated kotlin version number
 
 ## 1.0.7:
 
