@@ -1,5 +1,3 @@
-/// A service to handle save and retrieve operation on notify
-
 // ignore_for_file: avoid_print
 
 import 'dart:async';
@@ -11,6 +9,7 @@ import 'package:at_notify_flutter/models/notify_model.dart';
 import 'package:at_notify_flutter/utils/notify_utils.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
+/// A service to handle save and retrieve operation on notify
 class NotifyService {
   NotifyService._();
 
