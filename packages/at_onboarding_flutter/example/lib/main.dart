@@ -104,7 +104,7 @@ class MyAppState extends State<MyApp> {
                           result = await AtOnboarding.onboard(
                             context: context,
                             config: AtOnboardingConfig(
-                              atClientPreference: atClientPreference!,
+                              atClientPreference: preference,
                               domain: AtEnv.rootDomain,
                               rootEnvironment: AtEnv.rootEnvironment,
                               appAPIKey: AtEnv.appApiKey,
