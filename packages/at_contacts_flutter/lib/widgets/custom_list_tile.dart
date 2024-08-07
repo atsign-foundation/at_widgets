@@ -1,11 +1,6 @@
-/// A custom list tile to display the contacts
-/// takes in a function @param [onTap] to define what happens on tap of the tile
-/// @param [onTrailingPresses] to set the behaviour for trailing icon
-/// @param [asSelectionTile] to toggle whether the tile is selectable to select contacts
-/// @param [contact] for details of the contact
-/// @param [contactService] to get an instance of [AtContactsImpl]
-
 import 'dart:typed_data';
+
+import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:at_contacts_flutter/utils/colors.dart';
@@ -14,8 +9,13 @@ import 'package:at_contacts_flutter/widgets/contacts_initials.dart';
 import 'package:at_contacts_flutter/widgets/custom_circle_avatar.dart';
 import 'package:at_utils/at_logger.dart';
 import 'package:flutter/material.dart';
-import 'package:at_common_flutter/services/size_config.dart';
 
+/// A custom list tile to display the contacts
+/// takes in a function @param [onTap] to define what happens on tap of the tile
+/// @param [onTrailingPresses] to set the behaviour for trailing icon
+/// @param [asSelectionTile] to toggle whether the tile is selectable to select contacts
+/// @param [contact] for details of the contact
+/// @param [contactService] to get an instance of [AtContactsImpl]
 class CustomListTile extends StatefulWidget {
   final Function? onTap;
   final Function? onTrailingPressed;
@@ -47,8 +47,7 @@ class _CustomListTileState extends State<CustomListTile> {
   @override
   Widget build(BuildContext context) {
     Widget contactImage;
-    if (widget.contact!.tags != null &&
-        widget.contact!.tags!['image'] != null) {
+    if (widget.contact!.tags != null && widget.contact!.tags!['image'] != null) {
       Uint8List? image;
       try {
         List<int> intList = widget.contact!.tags!['image'].cast<int>();
@@ -76,8 +75,7 @@ class _CustomListTileState extends State<CustomListTile> {
         builder: (context, snapshot) {
           // ignore: omit_local_variable_types
           for (AtContact? contact in widget.contactService!.selectedContacts) {
-            if (contact == widget.contact ||
-                contact!.atSign == widget.contact!.atSign) {
+            if (contact == widget.contact || contact!.atSign == widget.contact!.atSign) {
               isSelected = true;
               break;
             } else {
@@ -112,8 +110,7 @@ class _CustomListTileState extends State<CustomListTile> {
               }
             },
             title: Text(
-              widget.contact!.tags != null &&
-                      widget.contact!.tags!['name'] != null
+              widget.contact!.tags != null && widget.contact!.tags!['name'] != null
                   ? widget.contact!.tags!['name']
                   : widget.contact!.atSign!.substring(1),
               style: TextStyle(
@@ -123,8 +120,7 @@ class _CustomListTileState extends State<CustomListTile> {
               ),
             ),
             subtitle: Text(
-              (widget.contact!.tags != null &&
-                      widget.contact!.tags!['nickname'] != null
+              (widget.contact!.tags != null && widget.contact!.tags!['nickname'] != null
                   ? '${widget.contact!.tags!['nickname']} (${widget.contact!.atSign!})'
                   : widget.contact!.atSign!),
               style: TextStyle(
