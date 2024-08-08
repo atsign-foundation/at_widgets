@@ -1,11 +1,7 @@
-/// A popup to ask the [AtSign] which is to be added
-
 import 'package:at_common_flutter/at_common_flutter.dart';
-
+import 'package:at_contacts_flutter/services/contact_service.dart';
 // ignore: library_prefixes
 import 'package:at_contacts_flutter/utils/text_strings.dart' as contactStrings;
-
-import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:at_contacts_flutter/utils/text_styles.dart'
 // ignore: library_prefixes
     as contactTextStyles;
@@ -53,10 +49,8 @@ class _AddContactDialogState extends State<AddContactDialog> {
       width: 100.toWidth,
       child: SingleChildScrollView(
         child: AlertDialog(
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10.toWidth)),
-          titlePadding: EdgeInsets.only(
-              top: 20.toHeight, left: 25.toWidth, right: 25.toWidth),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.toWidth)),
+          titlePadding: EdgeInsets.only(top: 20.toHeight, left: 25.toWidth, right: 25.toWidth),
           title: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -71,9 +65,7 @@ class _AddContactDialogState extends State<AddContactDialog> {
           ),
           content: ConstrainedBox(
             constraints: BoxConstraints(
-                maxHeight: (contactService.getAtSignError == '')
-                    ? 325.toHeight
-                    : 370.toHeight * deviceTextFactor),
+                maxHeight: (contactService.getAtSignError == '') ? 325.toHeight : 370.toHeight * deviceTextFactor),
             child: Column(
               children: [
                 SizedBox(
@@ -146,8 +138,7 @@ class _AddContactDialogState extends State<AddContactDialog> {
                         ? const CircularProgressIndicator()
                         : CustomButton(
                             height: 50.toHeight * deviceTextFactor,
-                            buttonText:
-                                contactStrings.TextStrings().addtoContact,
+                            buttonText: contactStrings.TextStrings().addtoContact,
                             onPressed: () async {
                               setState(() {
                                 isLoading = true;
@@ -160,21 +151,13 @@ class _AddContactDialogState extends State<AddContactDialog> {
                               setState(() {
                                 isLoading = false;
                               });
-                              if (contactService.checkAtSign != null &&
-                                  contactService.checkAtSign! &&
-                                  response) {
+                              if (contactService.checkAtSign != null && contactService.checkAtSign! && response) {
                                 if (!context.mounted) return;
                                 Navigator.pop(context);
                               }
                             },
-                            buttonColor:
-                                Theme.of(context).brightness == Brightness.light
-                                    ? Colors.black
-                                    : Colors.white,
-                            fontColor:
-                                Theme.of(context).brightness == Brightness.light
-                                    ? Colors.white
-                                    : Colors.black,
+                            buttonColor: Theme.of(context).brightness == Brightness.light ? Colors.black : Colors.white,
+                            fontColor: Theme.of(context).brightness == Brightness.light ? Colors.white : Colors.black,
                           )
                   ],
                 ),

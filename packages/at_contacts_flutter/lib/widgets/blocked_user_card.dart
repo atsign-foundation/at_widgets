@@ -1,25 +1,22 @@
-/// A list tile to display the blocked contact
-/// takes in a [AtContact] blocked user
-/// and displays it's name, atsign, profile picture and option to unblock the user
-
 import 'dart:typed_data';
 
+import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/utils/text_strings.dart';
 import 'package:at_contacts_flutter/utils/text_styles.dart';
 import 'package:at_contacts_flutter/widgets/contacts_initials.dart';
 import 'package:at_contacts_flutter/widgets/custom_circle_avatar.dart';
-
-import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_utils/at_logger.dart';
 import 'package:flutter/material.dart';
 
+/// A list tile to display the blocked contact
+/// takes in a [AtContact] blocked user
+/// and displays it's name, atsign, profile picture and option to unblock the user
 class BlockedUserCard extends StatefulWidget {
   final AtContact? blockeduser;
   final Function? unblockAtsign;
 
-  const BlockedUserCard({Key? key, this.blockeduser, this.unblockAtsign})
-      : super(key: key);
+  const BlockedUserCard({Key? key, this.blockeduser, this.unblockAtsign}) : super(key: key);
   @override
   _BlockedUserCardState createState() => _BlockedUserCardState();
 }
@@ -35,8 +32,7 @@ class _BlockedUserCardState extends State<BlockedUserCard> {
   @override
   Widget build(BuildContext context) {
     Widget contactImage;
-    if (widget.blockeduser!.tags != null &&
-        widget.blockeduser!.tags!['image'] != null) {
+    if (widget.blockeduser!.tags != null && widget.blockeduser!.tags!['image'] != null) {
       Uint8List? image;
       try {
         List<int> intList = widget.blockeduser!.tags!['image'].cast<int>();
