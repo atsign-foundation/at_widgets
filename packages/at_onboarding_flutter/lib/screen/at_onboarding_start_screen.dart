@@ -25,8 +25,7 @@ class AtOnboardingStartScreen extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<AtOnboardingStartScreen> createState() =>
-      _AtOnboardingStartScreenState();
+  State<AtOnboardingStartScreen> createState() => _AtOnboardingStartScreenState();
 }
 
 class _AtOnboardingStartScreenState extends State<AtOnboardingStartScreen> {
@@ -40,8 +39,7 @@ class _AtOnboardingStartScreenState extends State<AtOnboardingStartScreen> {
 
   void _init() async {
     // This feature will reopen in future
-    final isUsingSharedStorage =
-        await _onboardingService.isUsingSharedStorage();
+    final isUsingSharedStorage = await _onboardingService.isUsingSharedStorage();
     final showPopupShareStorage = widget.config.showPopupSharedStorage;
 
     if (isUsingSharedStorage == null &&
@@ -51,8 +49,7 @@ class _AtOnboardingStartScreenState extends State<AtOnboardingStartScreen> {
       final result = await askUserUseSharedStorage();
       await _onboardingService.initialSetup(usingSharedStorage: result);
     } else {
-      await _onboardingService.initialSetup(
-          usingSharedStorage: isUsingSharedStorage ?? false);
+      await _onboardingService.initialSetup(usingSharedStorage: isUsingSharedStorage ?? false);
     }
     _onboardingService.setAtClientPreference = widget.config.atClientPreference;
     try {
@@ -66,10 +63,10 @@ class _AtOnboardingStartScreenState extends State<AtOnboardingStartScreen> {
           atsign: _onboardingService.currentAtsign!,
         ),
       );
-    } catch (e) {
+    } catch (e, stacktrace) {
       debugPrint("AtOnboardingInitScreen: error - $e");
-      if (e == OnboardingStatus.ATSIGN_NOT_FOUND ||
-          e == OnboardingStatus.PRIVATE_KEY_NOT_FOUND) {
+      debugPrint(stacktrace.toString());
+      if (e == OnboardingStatus.ATSIGN_NOT_FOUND || e == OnboardingStatus.PRIVATE_KEY_NOT_FOUND) {
         if (!mounted) return;
         final result = await Navigator.push(
           context,
@@ -125,8 +122,7 @@ class _AtOnboardingStartScreenState extends State<AtOnboardingStartScreen> {
               padding: const EdgeInsets.all(AtOnboardingDimens.paddingNormal),
               decoration: BoxDecoration(
                 color: theme.scaffoldBackgroundColor,
-                borderRadius:
-                    BorderRadius.circular(AtOnboardingDimens.dialogBorderRadius),
+                borderRadius: BorderRadius.circular(AtOnboardingDimens.dialogBorderRadius),
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,

@@ -1,5 +1,15 @@
+## 2.0.4:
+
+- **CHORE**: Kotlin version increase to 1.8.20
+- **CHORE**: Major version increase of flutter_lints from ^2.0.3 to ^4.0.1
+- **CHORE**: Updated dependencies
+- **CHORE**: AndroidManifest updated
+- **CHORE**: gradle updated
+- **FIX**: Lint issues fixed
+
 ## 2.0.3:
-- **CHORE**: Major version increase of at_commons from ^3.0.55 to ^4.0.1
+
+- **CHORE**: Major version increase of at_commons from ^3.0.55 to ^4.0.0
 
 ## 2.0.2
 

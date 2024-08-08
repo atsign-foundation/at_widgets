@@ -27,12 +27,10 @@ class AtOnboardingAccountsScreen extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<AtOnboardingAccountsScreen> createState() =>
-      _AtOnboardingAccountsScreenState();
+  State<AtOnboardingAccountsScreen> createState() => _AtOnboardingAccountsScreenState();
 }
 
-class _AtOnboardingAccountsScreenState
-    extends State<AtOnboardingAccountsScreen> {
+class _AtOnboardingAccountsScreenState extends State<AtOnboardingAccountsScreen> {
   List<String> pairedAtsignsList = [];
   Object? lastSelectedIndex;
   late int greyStartIndex;
@@ -72,9 +70,7 @@ class _AtOnboardingAccountsScreenState
               ? Center(
                   child: Column(
                     children: <Widget>[
-                      CircularProgressIndicator(
-                          valueColor: AlwaysStoppedAnimation<Color>(
-                              theme.primaryColor)),
+                      CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(theme.primaryColor)),
                       Text(
                         AtOnboardingLocalizations.current.loading_atSigns,
                         style: const TextStyle(
@@ -88,8 +84,7 @@ class _AtOnboardingAccountsScreenState
               : Column(
                   children: <Widget>[
                     Text(
-                      widget.message ??
-                          AtOnboardingLocalizations.current.title_select_atSign,
+                      widget.message ?? AtOnboardingLocalizations.current.title_select_atSign,
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: AtOnboardingDimens.fontNormal,
@@ -109,9 +104,7 @@ class _AtOnboardingAccountsScreenState
                         },
                         value: 'new',
                         activeColor: theme.primaryColor,
-                        title: Text('@${widget.newAtsign}',
-                            style:
-                                const TextStyle(fontWeight: FontWeight.bold)),
+                        title: Text('@${widget.newAtsign}', style: const TextStyle(fontWeight: FontWeight.bold)),
                       )
                     ],
                     const Divider(thickness: 0.8),
@@ -120,8 +113,7 @@ class _AtOnboardingAccountsScreenState
                         itemCount: widget.atsigns.length,
                         itemBuilder: (BuildContext context, int index) {
                           String currentItem = '@${widget.atsigns[index]}';
-                          bool isExist =
-                              pairedAtsignsList.contains(currentItem);
+                          bool isExist = pairedAtsignsList.contains(currentItem);
                           return Padding(
                             padding: const EdgeInsets.symmetric(vertical: 2.0),
                             child: RadioListTile<Object>(
@@ -134,8 +126,7 @@ class _AtOnboardingAccountsScreenState
                                         lastSelectedIndex = value;
                                       });
                                       _showAlert(
-                                        widget.atsigns[int.parse(
-                                            lastSelectedIndex.toString())],
+                                        widget.atsigns[int.parse(lastSelectedIndex.toString())],
                                         context,
                                       );
                                     },
@@ -172,15 +163,11 @@ class _AtOnboardingAccountsScreenState
               style: theme.textTheme.bodyLarge,
               children: <InlineSpan>[
                 TextSpan(
-                  text:
-                      AtOnboardingLocalizations.current.title_pair_atSign_prev,
+                  text: AtOnboardingLocalizations.current.title_pair_atSign_prev,
                 ),
+                TextSpan(text: ' $atsign ', style: const TextStyle(fontWeight: FontWeight.bold)),
                 TextSpan(
-                    text: ' $atsign ',
-                    style: const TextStyle(fontWeight: FontWeight.bold)),
-                TextSpan(
-                  text:
-                      AtOnboardingLocalizations.current.title_pair_atSign_next,
+                  text: AtOnboardingLocalizations.current.title_pair_atSign_next,
                 )
               ],
             ),
@@ -189,7 +176,7 @@ class _AtOnboardingAccountsScreenState
             AtOnboardingSecondaryButton(
               height: 40,
               borderRadius: 20,
-              onPressed: () => Navigator.pop(_),
+              onPressed: () => Navigator.pop(context),
               child: Text(
                 AtOnboardingLocalizations.current.btn_cancel,
               ),
@@ -198,7 +185,7 @@ class _AtOnboardingAccountsScreenState
               height: 40,
               borderRadius: 20,
               onPressed: () {
-                Navigator.pop(_);
+                Navigator.pop(context);
                 Navigator.pop(context, atsign);
               },
               child: Text(
