@@ -135,34 +135,6 @@ and add the following keys:
 <key>com.apple.security.network.client</key>
 <true/>
 ```
-
-Then to ensure that the .atKeys file type is supported by macOS, open
-macos/Runner/Info.plist and add the following array:
-```
-<key>UTImportedTypeDeclarations</key>
-<array>
-  <dict>
-    <key>UTTypeIdentifier</key>
-    <string>com.atsign.atkeys</string>
-    <key>UTTypeConformsTo</key>
-    <array>
-      <string>public.json</string>
-    </array>
-    <key>UTTypeDescription</key>
-    <string>Atsign Cryptographic Key File</string>
-    <key>UTTypeTagSpecification</key>
-    <dict>
-      <key>public.filename-extension</key>
-      <array>
-        <string>atkeys</string>
-      </array>
-    </dict>
-    <key>UTTypeReferenceURL</key>
-    <string>https://github.com/atsign-foundation/at_protocol</string>
-  </dict>
-</array>
-```
-
 </details>
 
 ### 3. Migration guide
