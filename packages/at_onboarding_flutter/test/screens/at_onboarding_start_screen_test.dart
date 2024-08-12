@@ -1,3 +1,4 @@
+import 'package:at_auth/at_auth.dart';
 import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
 import 'package:at_onboarding_flutter/screen/at_onboarding_start_screen.dart';
 import 'package:at_onboarding_flutter/services/onboarding_service.dart';
@@ -14,7 +15,7 @@ class MockOnboardingService extends Mock implements OnboardingService {
   }
 
   @override
-  Future<bool> onboard({String? cramSecret}) {
+  Future<bool> onboard({String? cramSecret, AtOnboardingRequest? atOnboardingRequest}) {
     throw OnboardingStatus.ACTIVATE;
   }
 }
