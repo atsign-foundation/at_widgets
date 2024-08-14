@@ -136,33 +136,6 @@ and add the following keys:
 <true/>
 ```
 
-Then to ensure that the .atKeys file type is supported by macOS, open
-macos/Runner/Info.plist and add the following array:
-```
-<key>UTImportedTypeDeclarations</key>
-<array>
-  <dict>
-    <key>UTTypeIdentifier</key>
-    <string>com.atsign.atkeys</string>
-    <key>UTTypeConformsTo</key>
-    <array>
-      <string>public.json</string>
-    </array>
-    <key>UTTypeDescription</key>
-    <string>Atsign Cryptographic Key File</string>
-    <key>UTTypeTagSpecification</key>
-    <dict>
-      <key>public.filename-extension</key>
-      <array>
-        <string>atkeys</string>
-      </array>
-    </dict>
-    <key>UTTypeReferenceURL</key>
-    <string>https://github.com/atsign-foundation/at_protocol</string>
-  </dict>
-</array>
-```
-
 </details>
 
 ### 3. Migration guide
@@ -244,8 +217,8 @@ supported in the future with minor updates.
 
 Languages supported:
 
-* English ('en')
-* French ('fr')
+- English ('en')
+- French ('fr')
 
 The `at_onboarding_flutter` package can be supplied with additional languages in your code by
 setting

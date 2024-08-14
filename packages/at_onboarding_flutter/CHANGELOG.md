@@ -2,6 +2,11 @@
 
 - **CHORE**: Updated dependencies
 - **CHORE**: Updated kotlin version
+- **FIX**: Refactor "onboard" and "authenticate" methods to use "AtAuthService" instead of "AtClientService" which is introduced in at_client_mobile
+- **FIX**: atClientServiceMap marked as depreciated
+- **FIX**: 'enroll' method added
+- **FIX**: lint issues fixes
+- **FIX**: file_picker package replaced the use of file_selector on desktop.
 
 ## 6.1.7
 

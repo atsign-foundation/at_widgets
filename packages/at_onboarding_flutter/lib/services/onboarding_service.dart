@@ -24,7 +24,15 @@ class OnboardingService {
       AtStatusImpl(rootUrl: AtOnboardingConstants.serverDomain);
   final AtSignLogger _logger = AtSignLogger('Onboarding Service');
 
-  Map<String?, AtAuthService> atClientServiceMap = <String?, AtAuthService>{};
+  // NOTE: The atClientServiceMap which contains the "AtClientService" instance as a value is used by the mobile apps.
+  // Hence marking as deprecated without removing.
+  @Deprecated(
+      'The AtClientService will be replaced with AtAuthService. Use AtClientManager.getInstance() for AtClientManager instance.')
+  //ignore: deprecated_export_use
+  Map<String?, AtClientService> atClientServiceMap =
+      //ignore: deprecated_export_use
+      <String?, AtClientService>{};
+
   String? _atsign;
   AtClientPreference _atClientPreference = AtClientPreference();
 
@@ -71,15 +79,6 @@ class OnboardingService {
 
   Widget? get nextScreen => _nextScreen;
 
-  AtAuthService? _getClientServiceForAtsign(String? atsign) {
-    if (atClientServiceMap.containsKey(atsign)) {
-      return atClientServiceMap[atsign];
-    }
-    AtAuthService service =
-        AtClientMobile.authService(atsign!, atClientPreference);
-    return service;
-  }
-
   /// Fetches atsign from device keychain.
   Future<String?> getAtSign() async {
     return keyChainManager.getAtSign();
@@ -96,23 +95,58 @@ class OnboardingService {
     await keyChainManager.initialSetup(useSharedStorage: usingSharedStorage);
   }
 
+  /// To register for a new enrollment request
+  Future<AtEnrollmentResponse> enroll(
+      String atSign, EnrollmentRequest enrollmentRequest) async {
+    AtAuthService authService =
+        AtClientMobile.authService(atSign, atClientPreference);
+    return authService.enroll(enrollmentRequest);
+  }
+
   /// Returns `true` if authentication is successful for the existing atsign in device.
-  Future<bool> onboard() async {
-    AtAuthService atAuthService = _getClientServiceForAtsign(_atsign)!;
-
-    AtOnboardingRequest atOnboardingRequest = AtOnboardingRequest(_atsign!)
-      ..rootDomain = _atClientPreference.rootDomain
-      ..rootPort = _atClientPreference.rootPort;
-
-    AtOnboardingResponse atOnboardingResponse =
-        await atAuthService.onboard(atOnboardingRequest);
+  Future<bool> onboard(
+      {String? cramSecret, AtOnboardingRequest? atOnboardingRequest}) async {
     _atsign ??= await getAtSign();
-    atClientServiceMap.putIfAbsent(_atsign, () => atAuthService);
-    return atOnboardingResponse.isSuccessful;
+    if (_atsign == null || _atsign!.isEmpty) {
+      _logger.severe('atSign is not found');
+      throw OnboardingStatus.ATSIGN_NOT_FOUND;
+    }
+    AtAuthService authService =
+        AtClientMobile.authService(_atsign!, atClientPreference);
+    bool isAtSignOnboarded = await authService.isOnboarded(_atsign!);
+    // If atSign is onboarded, authenticate the atSign. Else onboard the atSign.
+    if (isAtSignOnboarded) {
+      AtAuthRequest atAuthRequest = AtAuthRequest(_atsign!);
+      AtAuthResponse atAuthResponse =
+          await authService.authenticate(atAuthRequest);
+      return atAuthResponse.isSuccessful;
+    }
+    var onboardingResponse = await authService.onboard(
+        AtOnboardingRequest(_atsign!)
+          ..appName = (atOnboardingRequest != null &&
+                  atOnboardingRequest.appName != null)
+              ? atOnboardingRequest.appName
+              : 'system'
+          ..deviceName = (atOnboardingRequest != null &&
+                  atOnboardingRequest.deviceName != null)
+              ? atOnboardingRequest.deviceName
+              : 'default-device',
+        cramSecret: cramSecret);
+    _logger.finer('onboardingResponse: $onboardingResponse');
+    if (onboardingResponse.isSuccessful) {
+      // Initializing "AtClientService" and adding to it map for backward compatibility.
+      // Invoke init() method to initialize AtClient and AtLookup instances in atClientService.
+      // ignore: deprecated_member_use, deprecated_export_use
+      AtClientService atClientService = AtClientService();
+      // ignore: deprecated_export_use
+      // ignore: deprecated_member_use_from_same_package
+      atClientServiceMap.putIfAbsent(_atsign, () => atClientService);
+    }
+    return onboardingResponse.isSuccessful;
   }
 
   /// Returns `false` if fails in authenticating [atsign] with [cramSecret]/[privateKey].
-  /// Throws Excpetion if atsign is null.
+  /// Throws Exception if atsign is null.
   Future<AtOnboardingResponseStatus> authenticate(String? atsign,
       {String? cramSecret,
       String? jsonData,
@@ -135,7 +169,8 @@ class OnboardingService {
         }
         return c.future;
       }
-      AtAuthService atAuthService = _getClientServiceForAtsign(atsign)!;
+      AtAuthService atAuthService =
+          AtClientMobile.authService(atsign, atClientPreference);
       _atClientPreference.cramSecret = cramSecret;
       if (cramSecret != null) {
         _atClientPreference.privateKey = null;
@@ -153,7 +188,13 @@ class OnboardingService {
           await atAuthService.authenticate(atAuthRequest);
       if (atAuthResponse.isSuccessful) {
         _atsign = atsign;
-        atClientServiceMap.putIfAbsent(_atsign, () => atAuthService);
+        // Initializing "AtClientService" and adding to it map for backward compatibility.
+        // Invoke init() method to initialize AtClient and AtLookup instances in atClientService.
+        // ignore: deprecated_member_use, deprecated_export_use
+        AtClientService atClientService = AtClientService();
+        // ignore: deprecated_export_use
+        // ignore: deprecated_member_use_from_same_package
+        atClientServiceMap.putIfAbsent(_atsign, () => atClientService);
         c.complete(AtOnboardingResponseStatus.authSuccess);
       }
     } catch (e) {
