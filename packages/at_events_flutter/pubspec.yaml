@@ -32,6 +32,7 @@ dependencies:
 dependency_overrides: 
   at_location_flutter:
     path: ../at_location_flutter
+  geolocator: ^12.0.0
 
 dev_dependencies:
   flutter_lints: ^2.0.3

@@ -45,6 +45,10 @@ dependencies:
     sdk: flutter
   flutter_dotenv: ^5.1.0
   path_provider: ^2.1.3
+dependency_overrides: 
+  at_location_flutter:
+    path: ../at_location_flutter
+  geolocator: ^12.0.0
 
 dev_dependencies:
   # The "flutter_lints" package below contains a set of recommended lints to
