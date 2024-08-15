@@ -1,6 +1,6 @@
 ## 3.0.13:
 
-- **FIX** Depreciated AtClientService methods replaced with AtAuthService methods
+- **FIX**: Depreciated AtClientService methods replaced with AtAuthService methods
 - **CHORE**: Major version increase of flutter_local_notifications from ^14.1.1 to ^17.2.2
 - **CHORE**: Kotlin version updated from ^1.7.10 to 1.8.20
 - **CHORE**: Android exported set to true in AndroidManifest.xml
