@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:at_client_mobile/at_client_mobile.dart';
 
+import 'onboarding_service.dart';
+
 class SDKService {
   static final KeyChainManager _keyChainManager = KeyChainManager.getInstance();
   Map<String?, AtAuthService>? atClientServiceMap = <String?, AtAuthService>{};
@@ -62,7 +64,11 @@ class SDKService {
   ///Resets [atsigns] list from device storage.
   Future<void> resetAtsigns(List<String> atsigns) async {
     for (String atsign in atsigns) {
-      await _keyChainManager.deleteAtSignFromKeychain(atsign);
+      await _keyChainManager.resetAtSignFromKeychain(atsign);
+      // Hint: Since, the OnboardingService is a singleton instance. Setting
+      // atSign to null to enable setting new atSign during subsequent
+      // onboard process.
+      OnboardingService.getInstance().setAtsign = null;
       atClientServiceMap!.remove(atsign);
       monitorConnectionMap!.remove(atsign);
     }
