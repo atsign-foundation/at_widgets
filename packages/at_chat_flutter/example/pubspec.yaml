@@ -59,6 +59,9 @@ flutter:
   # the material Icons class.
   uses-material-design: true
 
+dependency_overrides:
+  file_picker: ^8.1.1
+
 dev_dependencies:
   flutter_lints: ^4.0.0
   flutter_test:
