@@ -1,13 +1,6 @@
-/// A custom list tile to display the contacts
-/// takes in a function @param [onTap] to define what happens on tap of the tile
-/// @param [onTrailingPresses] to set the behaviour for trailing icon
-/// @param [asSelectionTile] to toggle whether the tile is selectable to select contacts
-/// @param [contact] for details of the contact
-/// @param [contactService] to get an instance of [AtContactsImpl]
-
-// ignore_for_file: avoid_print
-
+import 'dart:developer';
 import 'dart:typed_data';
+
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:at_common_flutter/at_common_flutter.dart';
 // ignore: import_of_legacy_library_into_null_safe
@@ -19,9 +12,14 @@ import 'package:at_contacts_group_flutter/services/group_service.dart';
 import 'package:at_contacts_group_flutter/utils/colors.dart';
 import 'package:at_contacts_group_flutter/utils/images.dart';
 import 'package:at_utils/at_logger.dart';
-
 import 'package:flutter/material.dart';
 
+/// A custom list tile to display the contacts
+/// takes in a function @param [onTap] to define what happens on tap of the tile
+/// @param [onTrailingPresses] to set the behaviour for trailing icon
+/// @param [asSelectionTile] to toggle whether the tile is selectable to select contacts
+/// @param [contact] for details of the contact
+/// @param [contactService] to get an instance of [AtContactsImpl]
 class CustomListTile extends StatefulWidget {
   final Function? onTap;
   final Function? onTrailingPressed;
@@ -85,22 +83,20 @@ class _CustomListTileState extends State<CustomListTile> {
           initials = initials?.substring(1);
         }
 
-        if (widget.item?.contact?.tags != null &&
-            widget.item?.contact?.tags!['image'] != null) {
+        if (widget.item?.contact?.tags != null && widget.item?.contact?.tags!['image'] != null) {
           List<int> intList = widget.item?.contact?.tags!['image'].cast<int>();
           image = Uint8List.fromList(intList);
         }
       } else {
         if (widget.item?.group?.groupPicture != null) {
-          image =
-              Uint8List.fromList(widget.item?.group?.groupPicture?.cast<int>());
+          image = Uint8List.fromList(widget.item?.group?.groupPicture?.cast<int>());
         }
 
         initials = widget.item?.group?.displayName;
       }
     } catch (e) {
       initials = 'UG';
-      print('Error in getting image $e');
+      log('Error in getting image $e');
     }
   }
 
@@ -155,8 +151,7 @@ class _CustomListTileState extends State<CustomListTile> {
               ),
             ),
             subtitle: Text(
-              widget.item?.contact?.atSign ??
-                  '${widget.item?.group?.members?.length} Members',
+              widget.item?.contact?.atSign ?? '${widget.item?.group?.members?.length} Members',
               style: TextStyle(
                 color: AllColors().FADED_TEXT,
                 fontSize: 14.toFont,
@@ -181,8 +176,7 @@ class _CustomListTileState extends State<CustomListTile> {
                             initials: (initials ?? 'UG'),
                           )),
             trailing: IconButton(
-              onPressed: (widget.asSelectionTile == false &&
-                      widget.onTrailingPressed != null)
+              onPressed: (widget.asSelectionTile == false && widget.onTrailingPressed != null)
                   ? widget.onTrailingPressed as void Function()?
                   : selectRemoveContact(),
               icon: (widget.asSelectionTile)
