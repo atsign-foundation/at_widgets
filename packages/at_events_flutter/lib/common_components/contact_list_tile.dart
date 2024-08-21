@@ -1,10 +1,10 @@
+import 'package:at_common_flutter/services/size_config.dart';
+import 'package:flutter/material.dart';
+
 /// This widget is a list tile to display contacts selected for sharing
-/// it takes [onlyRemovemethod] as a boolean with default value as [false]
+/// it takes [onlyRemoveMethod] as a boolean with default value as [false]
 /// if [true] trailing icon remains [close] icon [onAdd] method is disabled
 /// all [isSelected] functionalities are disabled
-import 'package:flutter/material.dart';
-import 'package:at_common_flutter/services/size_config.dart';
-
 class ContactListTile extends StatefulWidget {
   final String? name;
   final String? atSign;
@@ -98,10 +98,7 @@ class _ContactListTileState extends State<ContactListTile> {
                       height: 15.toHeight,
                       width: 15.toHeight,
                       decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: (widget.isSelected)
-                              ? Colors.black
-                              : Colors.transparent),
+                          shape: BoxShape.circle, color: (widget.isSelected) ? Colors.black : Colors.transparent),
                       child: (widget.isSelected)
                           ? Icon(
                               Icons.check,
