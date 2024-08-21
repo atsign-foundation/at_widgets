@@ -1,4 +1,12 @@
+## 3.0.13:
+
+- **CHORE**: Kotlin version increased from 1.7.10 to 1.8.20
+- **CHORE**: Major version increase of file_picker from ^6.1.1 to ^8.1.1
+- **CHORE**: Updated dependencies
+- **FIX**: Replaced the depreciated KeychainUtil.getPrivateKey method
+
 ## 3.0.12:
+
 - **CHORE**: Major version increase of at_commons from ^3.0.55 to ^4.0.1
 
 ## 3.0.11

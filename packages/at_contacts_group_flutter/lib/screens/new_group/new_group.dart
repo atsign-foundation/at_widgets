@@ -277,17 +277,10 @@ class _NewGroupState extends State<NewGroup> {
                     child: EmojiPicker(
                       key: UniqueKey(),
                       config: const Config(
+                        emojiViewConfig: EmojiViewConfig(
                           columns: 7,
                           emojiSizeMax: 32.0,
-                          verticalSpacing: 0,
-                          horizontalSpacing: 0,
-                          initCategory: Category.RECENT,
-                          bgColor: Color(0xFFF2F2F2),
-                          indicatorColor: Colors.blue,
-                          iconColor: Colors.grey,
-                          iconColorSelected: Colors.blue,
-                          recentTabBehavior: RecentTabBehavior.RECENT,
-                          recentsLimit: 28,
+                          backgroundColor: Color(0xFFF2F2F2),
                           noRecents: Text(
                             "No Recents",
                             style: TextStyle(
@@ -296,8 +289,8 @@ class _NewGroupState extends State<NewGroup> {
                               fontWeight: FontWeight.normal,
                             ),
                           ),
-                          categoryIcons: CategoryIcons(),
-                          buttonMode: ButtonMode.MATERIAL),
+                        ),
+                      ),
                       onEmojiSelected: (category, emoji) {
                         textController.text += emoji.emoji;
                       },

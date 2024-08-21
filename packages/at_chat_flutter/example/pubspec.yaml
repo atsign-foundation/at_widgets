@@ -59,8 +59,11 @@ flutter:
   # the material Icons class.
   uses-material-design: true
 
+dependency_overrides:
+  file_picker: ^8.1.1
+
 dev_dependencies:
-  flutter_lints: ^3.0.1
+  flutter_lints: ^4.0.0
   flutter_test:
     sdk: flutter
   # To add assets to your application, add an assets section, like this:
