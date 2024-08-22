@@ -7,6 +7,7 @@
 - **FIX**: 'enroll' method added
 - **FIX**: lint issues fixes
 - **FIX**: file_picker package replaced the use of file_selector on desktop.
+- **FIX**: restart the app no longer required after calling AtOnboarding.reset().
 
 ## 6.1.7
 
