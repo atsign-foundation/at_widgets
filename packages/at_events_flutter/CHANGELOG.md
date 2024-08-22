@@ -4,7 +4,7 @@
 - **CHORE**: Major version increase of flutter_lints from ^3.0.55 to ^4.0.1
 - **CHORE**: Major version increase of mocktail from ^0.3.0 to ^1.0.4
 - **CHORE**: Kotlin version increased from 1.7.10 to 1.8.20
-- **CHORE**: Android experted set to true
+- **CHORE**: Android exported set to true
 - **CHORE**: fixed dangling doc comment
 
 ## 3.1.13:
