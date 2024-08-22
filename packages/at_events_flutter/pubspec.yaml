@@ -19,7 +19,7 @@ dependencies:
   at_contact: ^3.0.8
   at_contacts_flutter: ^4.0.14
   at_contacts_group_flutter: ^4.0.15
-  at_location_flutter: ^3.1.12
+  at_location_flutter: ^3.1.13
   at_lookup: ^3.0.40
   at_utils: ^3.0.15
   flutter:
@@ -28,11 +28,6 @@ dependencies:
   geolocator: ^12.0.0
   latlong2: ^0.9.0
   sliding_up_panel: ^2.0.0+1
-
-dependency_overrides: 
-  at_location_flutter:
-    path: ../at_location_flutter
-  geolocator: ^12.0.0
 
 dev_dependencies:
   flutter_lints: ^4.0.0
