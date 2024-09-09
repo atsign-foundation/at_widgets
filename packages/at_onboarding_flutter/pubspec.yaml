@@ -17,18 +17,16 @@ dependencies:
   at_backupkey_flutter: ^4.0.12
   at_client: ^3.0.72
   at_client_mobile: ^3.2.18
-  at_commons: ^4.0.1
+  at_commons: ^4.0.11
   at_server_status: ^1.0.4
-  at_sync_ui_flutter: ^1.0.10
+  at_sync_ui_flutter: ^1.0.12
   at_utils: ^3.0.16
   file_picker: ^8.1.1
   at_auth: ^2.0.4
-
   flutter:
     sdk: flutter
   http: ^1.2.0
   image: ^4.1.6
-
   intl: ^0.19.0
   path_provider: ^2.1.2
   permission_handler: ^11.2.0
