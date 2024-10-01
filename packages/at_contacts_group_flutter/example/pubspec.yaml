@@ -31,7 +31,7 @@ dependencies:
   # at_contacts_flutter: ^4.0.0
   at_app_flutter: ^5.2.0
   at_backupkey_flutter: ^4.0.10
-  at_client_mobile: ^3.2.17
+  at_client_mobile: ^3.2.19
   at_contacts_flutter: ^4.0.14
   at_contacts_group_flutter:
     # When depending on this package from a real application you should use:
@@ -40,7 +40,7 @@ dependencies:
     # The example app is bundled with the plugin so we use a path dependency on
     # the parent directory to use the current plugin's version.
     path: ../
-  at_onboarding_flutter: ^6.1.7
+  at_onboarding_flutter: ^6.1.9
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.6
@@ -50,6 +50,8 @@ dependencies:
 
 dependency_overrides: 
   file_picker: ^8.1.1
+  at_contacts_flutter:
+    path: ../../at_contacts_flutter
 
 dev_dependencies:
   # The "flutter_lints" package below contains a set of recommended lints to
