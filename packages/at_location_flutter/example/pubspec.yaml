@@ -28,7 +28,7 @@ environment:
 # versions available, run `flutter pub outdated`.
 dependencies:
   at_app_flutter: ^5.2.0
-  at_client_mobile: ^3.2.17
+  at_client_mobile: ^3.2.19
   at_location_flutter:
     # When depending on this package from a real application you should use:
     #   at_location_flutter: ^x.y.z
@@ -36,7 +36,7 @@ dependencies:
     # The example app is bundled with the plugin so we use a path dependency on
     # the parent directory to use the current plugin's version.
     path: ../
-  at_onboarding_flutter: ^6.1.7
+  at_onboarding_flutter: ^6.1.9
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -46,8 +46,12 @@ dependencies:
   latlong2: ^0.9.0
   path_provider: ^2.1.3
   at_common_flutter: ^2.0.13
-  at_lookup: ^3.0.47
+  at_lookup: ^3.0.49
   flutter_dotenv: ^5.1.0
+
+dependency_overrides:
+  at_contacts_flutter:
+    path: ../../at_contacts_flutter
 
 dev_dependencies:
   # The "flutter_lints" package below contains a set of recommended lints to
