@@ -1,3 +1,7 @@
+## 4.0.16
+- build[deps]: Upgraded dependencies for the following packages:
+  - at_client_mobile: 3.2.19
+  - at_utils: 3.0.19
 ## 4.0.15
 
 - **FIX**: Resolved Static analysis messages
