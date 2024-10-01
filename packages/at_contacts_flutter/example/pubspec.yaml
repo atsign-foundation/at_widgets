@@ -33,6 +33,7 @@ dependencies:
   at_onboarding_flutter: ^6.1.9
   at_client: ^3.2.2
   at_client_mobile: ^3.2.19
+  at_backupkey_flutter: ^4.0.16
   path_provider: ^2.1.3
 
   # The following adds the Cupertino Icons font to your application.
@@ -41,10 +42,6 @@ dependencies:
   flutter:
     sdk: flutter
 
-#TODO replace with published version
-dependency_overrides:
-  at_backupkey_flutter:
-    path: ../../at_backupkey_flutter
 
 dev_dependencies:
   # The "flutter_lints" package below contains a set of recommended lints to
