@@ -1,4 +1,4 @@
-## 3.1.14
+## 3.0.14
 - build[deps]: Upgraded dependencies for the following packages:
   - at_client: 3.2.2
   - at_client_mobile: 3.2.19
