@@ -1,7 +1,7 @@
 name: at_contacts_group_flutter
 description: A Flutter plugin project to provide group functionality with
   contacts using atPlatform.
-version: 4.0.16
+version: 4.0.17
 homepage: https://docs.atsign.com/
 repository: https://github.com/atsign-foundation/at_widgets/tree/trunk/packages/at_contacts_group_flutter
 
@@ -17,7 +17,7 @@ dependencies:
   at_common_flutter: ^2.0.12
   at_commons: ^5.0.0
   at_contact: ^3.0.9
-  at_contacts_flutter: ^4.0.14
+  at_contacts_flutter: ^4.0.16
   at_utils: ^3.0.19
   collection: ^1.17.0
   emoji_picker_flutter: ^3.0.0
@@ -33,11 +33,6 @@ dependencies:
   fluttertoast: ^8.2.2
   image_compression: ^1.0.4
   pedantic: ^1.11.1
-
-#TODO replace with published version
-dependency_overrides:
-  at_contacts_flutter:
-    path: ../at_contacts_flutter
 
 dev_dependencies:
   flutter_lints: ^4.0.0
