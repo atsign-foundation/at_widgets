@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
-import 'package:at_onboarding_flutter/widgets/at_onboarding_dialog.dart';
+import 'package:at_onboarding_flutter/src/widgets/at_onboarding_dialog.dart';
 import 'package:at_sync_ui_flutter/at_sync_material.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';

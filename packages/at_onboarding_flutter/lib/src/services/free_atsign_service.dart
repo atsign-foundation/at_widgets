@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:at_onboarding_flutter/utils/at_onboarding_app_constants.dart';
+import 'package:at_onboarding_flutter/src/utils/at_onboarding_app_constants.dart';
 import 'package:http/io_client.dart';
 import 'package:http/http.dart';
 

@@ -1,9 +1,9 @@
 import 'dart:io';
 
 import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
-import 'package:at_onboarding_flutter/screen/at_onboarding_input_atsign_screen.dart';
-import 'package:at_onboarding_flutter/screen/at_onboarding_reference_screen.dart';
-import 'package:at_onboarding_flutter/widgets/at_onboarding_button.dart';
+import 'package:at_onboarding_flutter/src/screen/at_onboarding_input_atsign_screen.dart';
+import 'package:at_onboarding_flutter/src/screen/at_onboarding_reference_screen.dart';
+import 'package:at_onboarding_flutter/src/widgets/at_onboarding_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 

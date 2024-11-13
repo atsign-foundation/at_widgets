@@ -1,15 +1,15 @@
 import 'dart:io';
 
-import 'package:at_onboarding_flutter/at_onboarding_result.dart';
 import 'package:at_onboarding_flutter/localizations/generated/l10n.dart';
-import 'package:at_onboarding_flutter/screen/at_onboarding_activate_screen.dart';
-import 'package:at_onboarding_flutter/screen/at_onboarding_intro_screen.dart';
-import 'package:at_onboarding_flutter/screen/at_onboarding_reset_screen.dart';
-import 'package:at_onboarding_flutter/screen/at_onboarding_start_screen.dart';
-import 'package:at_onboarding_flutter/services/at_onboarding_config.dart';
-import 'package:at_onboarding_flutter/services/at_onboarding_theme.dart';
-import 'package:at_onboarding_flutter/services/onboarding_service.dart';
-import 'package:at_onboarding_flutter/utils/at_onboarding_app_constants.dart';
+import 'package:at_onboarding_flutter/src/at_onboarding_result.dart';
+import 'package:at_onboarding_flutter/src/screen/at_onboarding_activate_screen.dart';
+import 'package:at_onboarding_flutter/src/screen/at_onboarding_intro_screen.dart';
+import 'package:at_onboarding_flutter/src/screen/at_onboarding_reset_screen.dart';
+import 'package:at_onboarding_flutter/src/screen/at_onboarding_start_screen.dart';
+import 'package:at_onboarding_flutter/src/services/at_onboarding_config.dart';
+import 'package:at_onboarding_flutter/src/services/at_onboarding_theme.dart';
+import 'package:at_onboarding_flutter/src/services/onboarding_service.dart';
+import 'package:at_onboarding_flutter/src/utils/at_onboarding_app_constants.dart';
 import 'package:flutter/material.dart';
 
 class AtOnboarding {

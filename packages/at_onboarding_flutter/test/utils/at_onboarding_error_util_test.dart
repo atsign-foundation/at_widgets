@@ -1,4 +1,4 @@
-import 'package:at_onboarding_flutter/utils/at_onboarding_error_util.dart';
+import 'package:at_onboarding_flutter/src/utils/at_onboarding_error_util.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 main() {

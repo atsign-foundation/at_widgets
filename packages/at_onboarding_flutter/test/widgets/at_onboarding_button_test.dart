@@ -1,4 +1,4 @@
-import 'package:at_onboarding_flutter/widgets/at_onboarding_button.dart';
+import 'package:at_onboarding_flutter/src/widgets/at_onboarding_button.dart';
 import 'package:at_sync_ui_flutter/at_sync_material.dart';
 
 import '../test_material_app.dart';

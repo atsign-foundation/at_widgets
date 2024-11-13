@@ -1,8 +1,8 @@
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_onboarding_flutter/localizations/generated/l10n.dart';
-import 'package:at_onboarding_flutter/services/onboarding_service.dart';
-import 'package:at_onboarding_flutter/utils/at_onboarding_app_constants.dart';
-import 'package:at_onboarding_flutter/utils/at_onboarding_response_status.dart';
+import 'package:at_onboarding_flutter/src/services/onboarding_service.dart';
+import 'package:at_onboarding_flutter/src/utils/at_onboarding_app_constants.dart';
+import 'package:at_onboarding_flutter/src/utils/at_onboarding_response_status.dart';
 import 'package:at_server_status/at_server_status.dart';
 
 class AtOnboardingErrorToString {

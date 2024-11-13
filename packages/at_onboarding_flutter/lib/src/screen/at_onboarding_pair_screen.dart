@@ -2,13 +2,13 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
-import 'package:at_onboarding_flutter/screen/at_onboarding_otp_screen.dart';
-import 'package:at_onboarding_flutter/screen/at_onboarding_reference_screen.dart';
-import 'package:at_onboarding_flutter/services/free_atsign_service.dart';
-import 'package:at_onboarding_flutter/utils/at_onboarding_dimens.dart';
-import 'package:at_onboarding_flutter/utils/at_onboarding_strings.dart';
-import 'package:at_onboarding_flutter/widgets/at_onboarding_button.dart';
-import 'package:at_onboarding_flutter/widgets/at_onboarding_dialog.dart';
+import 'package:at_onboarding_flutter/src/screen/at_onboarding_otp_screen.dart';
+import 'package:at_onboarding_flutter/src/screen/at_onboarding_reference_screen.dart';
+import 'package:at_onboarding_flutter/src/services/free_atsign_service.dart';
+import 'package:at_onboarding_flutter/src/utils/at_onboarding_dimens.dart';
+import 'package:at_onboarding_flutter/src/utils/at_onboarding_strings.dart';
+import 'package:at_onboarding_flutter/src/widgets/at_onboarding_button.dart';
+import 'package:at_onboarding_flutter/src/widgets/at_onboarding_dialog.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -102,7 +102,8 @@ class _AtOnboardingPairScreenState extends State<AtOnboardingPairScreen> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      AtOnboardingLocalizations.current.enter_your_email_address,
+                      AtOnboardingLocalizations
+                          .current.enter_your_email_address,
                       style: const TextStyle(
                         fontSize: AtOnboardingDimens.fontLarge,
                         fontWeight: FontWeight.bold,

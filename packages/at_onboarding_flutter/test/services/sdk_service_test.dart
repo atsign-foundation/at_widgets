@@ -1,4 +1,4 @@
-import 'package:at_onboarding_flutter/services/sdk_service.dart';
+import 'package:at_onboarding_flutter/src/services/sdk_service.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 

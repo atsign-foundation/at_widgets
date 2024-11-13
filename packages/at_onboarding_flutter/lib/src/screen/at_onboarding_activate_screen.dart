@@ -2,19 +2,19 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:at_client_mobile/at_client_mobile.dart';
-import 'package:at_onboarding_flutter/at_onboarding_result.dart';
+import 'package:at_onboarding_flutter/src/at_onboarding_result.dart';
 import 'package:at_onboarding_flutter/localizations/generated/l10n.dart';
-import 'package:at_onboarding_flutter/screen/at_onboarding_backup_screen.dart';
-import 'package:at_onboarding_flutter/screen/at_onboarding_otp_screen.dart';
-import 'package:at_onboarding_flutter/screen/at_onboarding_reference_screen.dart';
-import 'package:at_onboarding_flutter/services/at_onboarding_config.dart';
-import 'package:at_onboarding_flutter/services/free_atsign_service.dart';
-import 'package:at_onboarding_flutter/services/onboarding_service.dart';
-import 'package:at_onboarding_flutter/utils/at_onboarding_dimens.dart';
-import 'package:at_onboarding_flutter/utils/at_onboarding_error_util.dart';
-import 'package:at_onboarding_flutter/utils/at_onboarding_response_status.dart';
-import 'package:at_onboarding_flutter/utils/at_onboarding_strings.dart';
-import 'package:at_onboarding_flutter/widgets/at_onboarding_dialog.dart';
+import 'package:at_onboarding_flutter/src/screen/at_onboarding_backup_screen.dart';
+import 'package:at_onboarding_flutter/src/screen/at_onboarding_otp_screen.dart';
+import 'package:at_onboarding_flutter/src/screen/at_onboarding_reference_screen.dart';
+import 'package:at_onboarding_flutter/src/services/at_onboarding_config.dart';
+import 'package:at_onboarding_flutter/src/services/free_atsign_service.dart';
+import 'package:at_onboarding_flutter/src/services/onboarding_service.dart';
+import 'package:at_onboarding_flutter/src/utils/at_onboarding_dimens.dart';
+import 'package:at_onboarding_flutter/src/utils/at_onboarding_error_util.dart';
+import 'package:at_onboarding_flutter/src/utils/at_onboarding_response_status.dart';
+import 'package:at_onboarding_flutter/src/utils/at_onboarding_strings.dart';
+import 'package:at_onboarding_flutter/src/widgets/at_onboarding_dialog.dart';
 import 'package:at_server_status/at_server_status.dart';
 import 'package:at_sync_ui_flutter/at_sync_material.dart';
 import 'package:flutter/material.dart';
@@ -103,7 +103,8 @@ class _AtOnboardingActivateScreenState
                     ),
                     const SizedBox(height: 10),
                     Text(
-                      AtOnboardingLocalizations.current.msg_wait_fetching_atSign,
+                      AtOnboardingLocalizations
+                          .current.msg_wait_fetching_atSign,
                     ),
                   ],
                 ),
@@ -146,7 +147,7 @@ class _AtOnboardingActivateScreenState
       data = jsonDecode(data);
 
       AtOnboardingOTPResult? result;
-      if(context.mounted) {
+      if (context.mounted) {
         result = await AtOnboardingOTPScreen.push(
           context: context,
           atSign: atsign ?? (widget.atSign ?? ''),

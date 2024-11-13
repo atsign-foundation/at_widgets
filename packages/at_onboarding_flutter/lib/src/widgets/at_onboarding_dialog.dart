@@ -1,5 +1,5 @@
 import 'package:at_onboarding_flutter/localizations/generated/l10n.dart';
-import 'package:at_onboarding_flutter/widgets/at_onboarding_button.dart';
+import '../widgets/at_onboarding_button.dart';
 import 'package:flutter/material.dart';
 
 class AtOnboardingDialog extends StatefulWidget {

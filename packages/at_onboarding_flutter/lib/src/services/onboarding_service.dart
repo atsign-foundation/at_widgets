@@ -3,8 +3,8 @@ import 'dart:convert';
 
 import 'package:at_auth/at_auth.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
-import 'package:at_onboarding_flutter/utils/at_onboarding_app_constants.dart';
-import 'package:at_onboarding_flutter/utils/at_onboarding_response_status.dart';
+import 'package:at_onboarding_flutter/src/utils/at_onboarding_app_constants.dart';
+import 'package:at_onboarding_flutter/src/utils/at_onboarding_response_status.dart';
 import 'package:at_server_status/at_server_status.dart';
 import 'package:at_utils/at_logger.dart';
 import 'package:flutter/material.dart';

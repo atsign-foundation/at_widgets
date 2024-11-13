@@ -1,12 +1,12 @@
 import 'dart:io';
 
 import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
-import 'package:at_onboarding_flutter/services/at_onboarding_backup_service.dart';
-import 'package:at_onboarding_flutter/services/onboarding_service.dart';
-import 'package:at_onboarding_flutter/utils/at_onboarding_app_constants.dart';
-import 'package:at_onboarding_flutter/utils/at_onboarding_dimens.dart';
-import 'package:at_onboarding_flutter/utils/at_onboarding_strings.dart';
-import 'package:at_onboarding_flutter/widgets/at_onboarding_button.dart';
+import 'package:at_onboarding_flutter/src/services/at_onboarding_backup_service.dart';
+import 'package:at_onboarding_flutter/src/services/onboarding_service.dart';
+import 'package:at_onboarding_flutter/src/utils/at_onboarding_app_constants.dart';
+import 'package:at_onboarding_flutter/src/utils/at_onboarding_dimens.dart';
+import 'package:at_onboarding_flutter/src/utils/at_onboarding_strings.dart';
+import 'package:at_onboarding_flutter/src/widgets/at_onboarding_button.dart';
 import 'package:flutter/material.dart';
 
 /// This screen is for backing up an atKey during onboarding
