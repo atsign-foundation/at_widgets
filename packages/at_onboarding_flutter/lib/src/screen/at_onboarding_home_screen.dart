@@ -471,7 +471,8 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
     await _checkShowTutorial();
   }
 
-  Future<dynamic> _processSharedSecret(String atsign, String secret) async {
+  Future<dynamic> _processSharedSecret(String atsign, String secret,
+      {bool retry = true}) async {
     dynamic authResponse;
     try {
       _inprogressDialog.show(
@@ -550,9 +551,8 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
           e,
           title: AtOnboardingLocalizations.current.msg_auth_failed,
         );
-      } else if (e == AtOnboardingResponseStatus.serverNotReached &&
-          _isContinue) {
-        await _processSharedSecret(atsign, secret);
+      } else if (e == AtOnboardingResponseStatus.serverNotReached && retry) {
+        await _processSharedSecret(atsign, secret, retry: false);
       } else if (e == AtOnboardingResponseStatus.timeOut) {
         await _showAlertDialog(
           e,

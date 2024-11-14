@@ -16,12 +16,18 @@ class AtKeysFileUploadService {
   AtKeysFileUploadService({required AtOnboardingConfig config})
       : _config = config;
 
+  bool get isMobile => Platform.isIOS || Platform.isAndroid;
   Future<String?> pickFile() async {
     try {
-      FilePickerResult? result = await FilePicker.platform.pickFiles(
-        type: FileType.custom,
-        allowedExtensions: ['atKeys', 'atkeys'],
-      );
+      FilePickerResult? result = isMobile
+          ? await FilePicker.platform.pickFiles(
+              type: FileType.any,
+            )
+          : await FilePicker.platform.pickFiles(
+              type: FileType.custom,
+              allowedExtensions: ['atKeys', 'atkeys'],
+            );
+
       return result?.files.single.path;
     } catch (e) {
       _logger.severe('Error with desktop atKeys file picker: $e');
