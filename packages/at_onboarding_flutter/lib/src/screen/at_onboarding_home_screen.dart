@@ -1,8 +1,5 @@
-import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
 
-import 'package:archive/archive.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_onboarding_flutter/src/at_onboarding_result.dart';
 import 'package:at_onboarding_flutter/localizations/generated/l10n.dart';
@@ -13,8 +10,8 @@ import 'package:at_onboarding_flutter/src/screen/at_onboarding_input_atsign_scre
 import 'package:at_onboarding_flutter/src/screen/at_onboarding_reference_screen.dart';
 import 'package:at_onboarding_flutter/src/services/at_onboarding_config.dart';
 import 'package:at_onboarding_flutter/src/services/at_onboarding_tutorial_service.dart';
+import 'package:at_onboarding_flutter/src/services/at_keys_file_upload_service.dart';
 import 'package:at_onboarding_flutter/src/services/onboarding_service.dart';
-import 'package:at_onboarding_flutter/src/utils/at_onboarding_app_constants.dart';
 import 'package:at_onboarding_flutter/src/utils/at_onboarding_dimens.dart';
 import 'package:at_onboarding_flutter/src/utils/at_onboarding_error_util.dart';
 import 'package:at_onboarding_flutter/src/utils/at_onboarding_response_status.dart';
@@ -24,10 +21,8 @@ import 'package:at_onboarding_flutter/src/widgets/at_onboarding_dialog.dart';
 import 'package:at_server_status/at_server_status.dart';
 import 'package:at_sync_ui_flutter/at_sync_material.dart';
 import 'package:at_utils/at_logger.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:image/image.dart' as img;
-import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:permission_handler/permission_handler.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -55,13 +50,13 @@ class AtOnboardingHomeScreen extends StatefulWidget {
   final bool isFromIntroScreen;
 
   const AtOnboardingHomeScreen({
-    Key? key,
+    super.key,
     required this.config,
     this.getAtSign = false,
     this.hideReferences = false,
     this.hideQrScan = false,
     this.isFromIntroScreen = false,
-  }) : super(key: key);
+  });
 
   @override
   State<AtOnboardingHomeScreen> createState() => _AtOnboardingHomeScreenState();
@@ -78,7 +73,6 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
   bool loading = false;
   bool permissionGrated = false;
 
-  bool _isContinue = true;
   String? _pairingAtsign;
 
   ServerStatus? atSignStatus;
@@ -97,6 +91,8 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
   GlobalKey keyUploadQRCode = GlobalKey();
   GlobalKey keyActivateAtSign = GlobalKey();
   GlobalKey keyCreateAnAtSign = GlobalKey();
+
+  late AtKeysFileUploadService filePicker;
 
   Future<void> askPermissions(Permission type) async {
     if (type == Permission.camera) {
@@ -168,11 +164,7 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
                       key: keyUploadAtSign,
                       height: 48,
                       borderRadius: 24,
-                      onPressed: (Platform.isMacOS ||
-                              Platform.isLinux ||
-                              Platform.isWindows)
-                          ? _uploadKeyFileForDesktop
-                          : _uploadKeyFile,
+                      onPressed: _uploadKeyFile,
                       isLoading: loading,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -312,6 +304,7 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
   @override
   void initState() {
     _inprogressDialog = AtSyncDialog(context: context);
+    filePicker = AtKeysFileUploadService(config: widget.config);
     checkPermissions();
     super.initState();
     _init();
@@ -465,19 +458,6 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
     }
   }
 
-  Future<String?> _desktopKeyPicker() async {
-    try {
-      FilePickerResult? result = await FilePicker.platform.pickFiles(
-        type: FileType.custom,
-        allowedExtensions: ['atKeys', 'atkeys'],
-      );
-      return result?.files.single.path;
-    } catch (e) {
-      _logger.severe('Error with desktop atKeys file picker: $e');
-      return null;
-    }
-  }
-
   void _endTutorial() async {
     var tutorialInfo = await AtOnboardingTutorialService.getTutorialInfo();
     tutorialInfo ??= AtTutorialServiceInfo();
@@ -489,70 +469,6 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
   void _init() async {
     initTargets();
     await _checkShowTutorial();
-  }
-
-  Future<void> _processAESKey(
-      String? atsign, String? aesKey, String contents) async {
-    dynamic authResponse;
-    assert(aesKey != null || aesKey != '');
-    assert(atsign != null || atsign != '');
-    assert(contents != '');
-    _inprogressDialog.show(
-      message: AtOnboardingLocalizations.current.processing,
-    );
-    await Future.delayed(const Duration(milliseconds: 400));
-    try {
-      bool isExist = await _onboardingService.isExistingAtsign(atsign);
-      if (isExist) {
-        _inprogressDialog.close();
-        await showErrorDialog(AtOnboardingErrorToString().pairedAtsign(atsign));
-        return;
-      }
-
-      _onboardingService.setAtClientPreference =
-          widget.config.atClientPreference;
-
-      authResponse = await _onboardingService.authenticate(
-        atsign,
-        jsonData: contents,
-        decryptKey: aesKey,
-      );
-      _inprogressDialog.close();
-      if (authResponse == AtOnboardingResponseStatus.authSuccess) {
-        //Don't show backup key for case user upload backup key
-        // await AtOnboardingBackupScreen.push(context: context);
-        if (!mounted) return;
-        Navigator.pop(context, AtOnboardingResult.success(atsign: atsign!));
-      } else if (authResponse == AtOnboardingResponseStatus.serverNotReached) {
-        await _showAlertDialog(
-          AtOnboardingLocalizations.current.msg_atSign_unreachable,
-        );
-      } else if (authResponse == AtOnboardingResponseStatus.authFailed) {
-        await _showAlertDialog(
-          AtOnboardingLocalizations.current.error_authenticated_failed,
-        );
-      } else {
-        await showErrorDialog(
-          AtOnboardingLocalizations.current.msg_response_time_out,
-        );
-      }
-    } catch (e) {
-      _inprogressDialog.close();
-      if (e == AtOnboardingResponseStatus.serverNotReached && _isContinue) {
-        await _processAESKey(atsign, aesKey, contents);
-      } else if (e == AtOnboardingResponseStatus.authFailed) {
-        _logger.severe('Error in authenticateWithAESKey');
-        await showErrorDialog(
-          AtOnboardingLocalizations.current.msg_auth_failed,
-        );
-      } else if (e == AtOnboardingResponseStatus.timeOut) {
-        await showErrorDialog(
-          AtOnboardingLocalizations.current.msg_response_time_out,
-        );
-      } else {
-        _logger.warning(e);
-      }
-    }
   }
 
   Future<dynamic> _processSharedSecret(String atsign, String secret) async {
@@ -732,195 +648,81 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
     )..show(context: context);
   }
 
+  void setLoading(bool loading) {
+    if (this.loading != loading) {
+      setState(() {
+        this.loading = loading;
+      });
+    }
+  }
+
   Future<void> _uploadKeyFile() async {
-    try {
-      if (!permissionGrated) {
-        await checkPermissions();
-      }
-      _isContinue = true;
-      String? fileContents, aesKey, atsign;
-      FilePickerResult? result =
-          await FilePicker.platform.pickFiles(type: FileType.any);
-      if ((result?.files ?? []).isEmpty) {
-        //User cancelled => do nothing
-        return;
-      }
-      setState(() {
-        loading = true;
-      });
-      for (PlatformFile pickedFile in result?.files ?? <PlatformFile>[]) {
-        String? path = pickedFile.path;
-        if (path == null) {
-          throw const FileSystemException(
-            'FilePicker.pickFiles returned a null path',
-          );
-        }
-        File selectedFile = File(path);
-        int length = selectedFile.lengthSync();
-        if (length < 10) {
+    await checkPermissions();
+    Stream<FileUploadStatus> statusStream =
+        filePicker.uploadKeyFile(_pairingAtsign);
+    statusStream.listen((status) async {
+      switch (status) {
+        case FilePickingInProgress():
+          setLoading(true);
+          break;
+        case FilePickingDone():
+          setLoading(false);
+          break;
+        case FilePickingCanceled():
+          setLoading(false);
+          break;
+        case ErrorIncorrectKeyFile():
           await showErrorDialog(_incorrectKeyFile);
-          return;
-        }
-
-        if (pickedFile.extension == 'zip') {
-          Uint8List bytes = selectedFile.readAsBytesSync();
-          Archive archive = ZipDecoder().decodeBytes(bytes);
-          for (ArchiveFile file in archive) {
-            if (file.name.contains('atKeys')) {
-              fileContents = String.fromCharCodes(file.content);
-            } else if (aesKey == null &&
-                atsign == null &&
-                file.name.contains('_private_key.png')) {
-              List<int> bytes = file.content as List<int>;
-              String path = (await path_provider.getTemporaryDirectory()).path;
-              File file1 = await File('${path}test').create();
-              file1.writeAsBytesSync(bytes);
-              String result = decodeQrCode(file1.path);
-              List<String> params = result.replaceAll('"', '').split(':');
-              atsign = params[0];
-              aesKey = params[1];
-              await File('${path}test').delete();
-              //read scan QRcode and extract atsign,aeskey
-            }
-          }
-        } else if (pickedFile.name.contains('atKeys')) {
-          fileContents = File(path.toString()).readAsStringSync();
-        } else if (aesKey == null &&
-            atsign == null &&
-            pickedFile.name.contains('_private_key.png')) {
-          //read scan QRcode and extract atsign,aeskey
-          var result = decodeQrCode(path);
-
-          List<String> params = result.split(':');
-          atsign = params[0];
-          aesKey = params[1];
-        } else {
-          Uint8List result1 = selectedFile.readAsBytesSync();
-          fileContents = String.fromCharCodes(result1);
-          bool result = _validatePickedFileContents(fileContents);
-          _logger.finer('result after extracting data is......$result');
-          if (!result) {
-            await showErrorDialog(_incorrectKeyFile);
-            setState(() {
-              loading = false;
-            });
-            return;
-          }
-        }
+          break;
+        case ErrorAtSignMismatch():
+          await showErrorDialog(
+              AtOnboardingErrorToString().atsignMismatch(_pairingAtsign));
+          break;
+        case ErrorFailedFileProcessing():
+          await showErrorDialog(_failedFileProcessing);
+          break;
+        case ProcessingAesKeyInProgress():
+          _inprogressDialog.show(
+            message: AtOnboardingLocalizations.current.processing,
+          );
+          break;
+        // Non constant status, so use _ for pattern match
+        case ErrorPairedAtsign _:
+          _inprogressDialog.close();
+          await showErrorDialog(
+              AtOnboardingErrorToString().pairedAtsign(status.atSign));
+          break;
+        case ProcessingAesKeyDone():
+          _inprogressDialog.close();
+          break;
+        case ErrorAtServerUnreachable():
+          await _showAlertDialog(
+            AtOnboardingLocalizations.current.msg_atSign_unreachable,
+          );
+          break;
+        case ErrorAuthFailed():
+          await _showAlertDialog(
+            AtOnboardingLocalizations.current.error_authenticated_failed,
+          );
+          break;
+        case ErrorAuthTimeout():
+          await showErrorDialog(
+            AtOnboardingLocalizations.current.msg_response_time_out,
+          );
+          break;
+        // Non constant status, so use _ for pattern match
+        case FileUploadAuthSuccess _:
+          //Don't show backup key for case user upload backup key
+          // await AtOnboardingBackupScreen.push(context: context);
+          if (!mounted) return;
+          Navigator.pop(
+              context, AtOnboardingResult.success(atsign: status.atSign!));
       }
-      if (aesKey == null && atsign == null && fileContents != null) {
-        List<String> keyData = fileContents.split(',"@');
-        List<String> params = keyData[1]
-            .toString()
-            .substring(0, keyData[1].length - 2)
-            .split('":"');
-        atsign = "@${params[0]}";
-        Map<String, dynamic> keyMap = jsonDecode(fileContents);
-        aesKey = keyMap[AtOnboardingConstants.atSelfEncryptionKey];
-      }
-      if (fileContents == null || (aesKey == null && atsign == null)) {
-        await showErrorDialog(_incorrectKeyFile);
-        setState(() {
-          loading = false;
-        });
-        return;
-      } else if (OnboardingService.getInstance().formatAtSign(atsign) !=
-              _pairingAtsign &&
-          _pairingAtsign != null) {
-        await showErrorDialog(
-            AtOnboardingErrorToString().atsignMismatch(_pairingAtsign));
-        setState(() {
-          loading = false;
-        });
-        return;
-      }
+    }, onDone: () {
       setState(() {
-        loading = false;
+        // Just in case
+        setLoading(false);
       });
-      await _processAESKey(atsign, aesKey, fileContents);
-    } catch (error) {
-      setState(() {
-        loading = false;
-      });
-      _logger.severe('Uploading backup zip file throws $error');
-      await showErrorDialog(_failedFileProcessing);
-    }
-  }
-
-  Future<void> _uploadKeyFileForDesktop() async {
-    try {
-      _isContinue = true;
-      String? fileContents, aesKey, atsign;
-      setState(() {
-        loading = true;
-      });
-
-      String? path = await _desktopKeyPicker();
-      if (path == null) {
-        setState(() {
-          loading = false;
-        });
-        return;
-      }
-
-      File selectedFile = File(path);
-      int length = selectedFile.lengthSync();
-      if (length < 10) {
-        await showErrorDialog(_incorrectKeyFile);
-        return;
-      }
-
-      fileContents = File(path).readAsStringSync();
-      // ignore: unnecessary_null_comparison
-      if (aesKey == null && atsign == null && fileContents.isNotEmpty) {
-        List<String> keyData = fileContents.split(',"@');
-        List<String> params = keyData[1]
-            .toString()
-            .substring(0, keyData[1].length - 2)
-            .split('":"');
-        atsign = "@${params[0]}";
-        Map<String, dynamic> keyMap = jsonDecode(fileContents);
-        aesKey = keyMap[AtOnboardingConstants.atSelfEncryptionKey];
-      }
-      if (fileContents.isEmpty || (aesKey == null && atsign == null)) {
-        await showErrorDialog(_incorrectKeyFile);
-        setState(() {
-          loading = false;
-        });
-        return;
-      } else if (OnboardingService.getInstance().formatAtSign(atsign) !=
-              _pairingAtsign &&
-          _pairingAtsign != null) {
-        await showErrorDialog(
-            AtOnboardingErrorToString().atsignMismatch(_pairingAtsign));
-        setState(() {
-          loading = false;
-        });
-        return;
-      }
-      setState(() {
-        loading = false;
-      });
-      await _processAESKey(atsign, aesKey, fileContents);
-    } catch (error) {
-      setState(() {
-        loading = false;
-      });
-      _logger.severe('Uploading backup zip file throws $error');
-      await showErrorDialog(_failedFileProcessing);
-    }
-  }
-
-  bool _validatePickedFileContents(String fileContents) {
-    bool result = fileContents
-            .contains(BackupKeyConstants.PKAM_PRIVATE_KEY_FROM_KEY_FILE) &&
-        fileContents
-            .contains(BackupKeyConstants.PKAM_PUBLIC_KEY_FROM_KEY_FILE) &&
-        fileContents
-            .contains(BackupKeyConstants.ENCRYPTION_PRIVATE_KEY_FROM_FILE) &&
-        fileContents
-            .contains(BackupKeyConstants.ENCRYPTION_PUBLIC_KEY_FROM_FILE) &&
-        fileContents.contains(BackupKeyConstants.SELF_ENCRYPTION_KEY_FROM_FILE);
-    return result;
+    });
   }
 }
