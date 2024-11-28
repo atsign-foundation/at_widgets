@@ -1,5 +1,5 @@
 import 'package:at_backupkey_flutter/utils/color_constants.dart';
-import 'package:at_onboarding_flutter/localizations/generated/l10n.dart';
+import 'package:at_onboarding_flutter/generated/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -12,14 +12,13 @@ class AtOnboardingWebviewScreen extends StatefulWidget {
   final String? title;
 
   const AtOnboardingWebviewScreen({
-    Key? key,
+    super.key,
     this.url,
     this.title,
-  }) : super(key: key);
+  });
 
   @override
-  State<AtOnboardingWebviewScreen> createState() =>
-      _AtOnboardingWebviewScreenState();
+  State<AtOnboardingWebviewScreen> createState() => _AtOnboardingWebviewScreenState();
 }
 
 class _AtOnboardingWebviewScreenState extends State<AtOnboardingWebviewScreen> {

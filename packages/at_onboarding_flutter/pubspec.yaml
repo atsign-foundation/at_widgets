@@ -1,6 +1,6 @@
 name: at_onboarding_flutter
-description: A Flutter plugin project for onboarding any atSign in atPlatform
-  apps with ease. Provides a QRscanner option and an upload key file option to
+description: A Flutter plugin project for onboarding any atSign in atPlatform apps with
+  ease. Provides a QRscanner option and an upload key file option to
   authenticate.
 version: 6.1.9
 homepage: https://docs.atsign.com/
@@ -25,6 +25,8 @@ dependencies:
   at_auth: ^2.0.7
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
   http: ^1.2.0
   image: ^4.1.6
   intl: ^0.19.0
@@ -48,6 +50,7 @@ dev_dependencies:
 # following page: https://dart.dev/tools/pub/pubspec
 # The following section is specific to Flutter.
 flutter:
+  generate: true
   # This section identifies this Flutter project as a plugin project.
   # The 'pluginClass' and Android 'package' identifiers should not ordinarily
   # be modified. They are used by the tooling to maintain consistency when
@@ -99,5 +102,4 @@ flutter:
 flutter_intl:
   enabled: true
   class_name: AtOnboardingLocalizations
-  arb_dir: lib/localizations/l10n
-  output_dir: lib/localizations/generated
+  template-arb-file: intl_en.arb

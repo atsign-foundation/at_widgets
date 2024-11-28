@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:at_client_mobile/at_client_mobile.dart';
+import 'package:at_onboarding_flutter/generated/l10n.dart';
 import 'package:at_onboarding_flutter/src/at_onboarding_result.dart';
-import 'package:at_onboarding_flutter/localizations/generated/l10n.dart';
 import 'package:at_onboarding_flutter/src/screen/at_onboarding_backup_screen.dart';
 import 'package:at_onboarding_flutter/src/screen/at_onboarding_otp_screen.dart';
 import 'package:at_onboarding_flutter/src/screen/at_onboarding_reference_screen.dart';
@@ -32,19 +32,17 @@ class AtOnboardingActivateScreen extends StatefulWidget {
   final AtOnboardingConfig config;
 
   const AtOnboardingActivateScreen({
-    Key? key,
+    super.key,
     required this.hideReferences,
     this.atSign,
     required this.config,
-  }) : super(key: key);
+  });
 
   @override
-  State<AtOnboardingActivateScreen> createState() =>
-      _AtOnboardingActivateScreenState();
+  State<AtOnboardingActivateScreen> createState() => _AtOnboardingActivateScreenState();
 }
 
-class _AtOnboardingActivateScreenState
-    extends State<AtOnboardingActivateScreen> {
+class _AtOnboardingActivateScreenState extends State<AtOnboardingActivateScreen> {
   final FreeAtsignService _freeAtsignService = FreeAtsignService();
   final OnboardingService _onboardingService = OnboardingService.getInstance();
 
@@ -103,8 +101,7 @@ class _AtOnboardingActivateScreenState
                     ),
                     const SizedBox(height: 10),
                     Text(
-                      AtOnboardingLocalizations
-                          .current.msg_wait_fetching_atSign,
+                      AtOnboardingLocalizations.current.msg_wait_fetching_atSign,
                     ),
                   ],
                 ),
@@ -126,8 +123,7 @@ class _AtOnboardingActivateScreenState
     }
 
     // check if atSign already activated
-    AtSignStatus? atsignStatus =
-        await _onboardingService.checkAtsignStatus(atsign: atsign);
+    AtSignStatus? atsignStatus = await _onboardingService.checkAtsignStatus(atsign: atsign);
     if (atsignStatus == AtSignStatus.activated) {
       bool isPaired = await _onboardingService.isExistingAtsign(atsign);
       await showErrorDialog(
@@ -140,8 +136,7 @@ class _AtOnboardingActivateScreenState
 
     dynamic data;
 
-    dynamic response = await _freeAtsignService
-        .loginWithAtsign(atsign ?? (widget.atSign ?? ''));
+    dynamic response = await _freeAtsignService.loginWithAtsign(atsign ?? (widget.atSign ?? ''));
     if (response.statusCode == 200) {
       data = response.body;
       data = jsonDecode(data);
@@ -209,19 +204,17 @@ class _AtOnboardingActivateScreenState
 
       bool isExist = await _onboardingService.isExistingAtsign(atsign);
       if (isExist) {
-        await _showAlertDialog(
-            AtOnboardingErrorToString().pairedAtsign(atsign));
+        await _showAlertDialog(AtOnboardingErrorToString().pairedAtsign(atsign));
         return;
       }
 
       //Delay for waiting for ServerStatus change to teapot when activating an atsign
       await Future.delayed(const Duration(seconds: 10));
 
-      _onboardingService.setAtClientPreference =
-          widget.config.atClientPreference;
+      _onboardingService.setAtClientPreference = widget.config.atClientPreference;
 
-      authResponse = await _onboardingService.authenticate(atsign,
-          cramSecret: secret, status: OnboardingStatus.ACTIVATE);
+      authResponse =
+          await _onboardingService.authenticate(atsign, cramSecret: secret, status: OnboardingStatus.ACTIVATE);
 
       int round = 1;
       atSignStatus = await _onboardingService.checkAtSignServerStatus(atsign);
@@ -291,8 +284,7 @@ class _AtOnboardingActivateScreenState
   }
 
   Future<void> _showAlertDialog(dynamic errorMessage, {String? title}) async {
-    String? messageString =
-        AtOnboardingErrorToString().getErrorMessage(errorMessage);
+    String? messageString = AtOnboardingErrorToString().getErrorMessage(errorMessage);
 
     final theme = Theme.of(context).copyWith(
       primaryColor: widget.config.theme?.primaryColor,

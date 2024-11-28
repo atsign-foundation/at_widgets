@@ -1,5 +1,5 @@
 import 'package:at_client_mobile/at_client_mobile.dart';
-import 'package:at_onboarding_flutter/localizations/generated/l10n.dart';
+import 'package:at_onboarding_flutter/generated/l10n.dart';
 import 'package:at_onboarding_flutter/src/services/onboarding_service.dart';
 import 'package:at_onboarding_flutter/src/utils/at_onboarding_app_constants.dart';
 import 'package:at_onboarding_flutter/src/utils/at_onboarding_response_status.dart';
@@ -10,8 +10,7 @@ class AtOnboardingErrorToString {
     OnboardingService onboardingService = OnboardingService.getInstance();
     switch (error.runtimeType) {
       case AtClientException:
-        return AtOnboardingLocalizations
-            .current.error_unable_to_perform_this_action;
+        return AtOnboardingLocalizations.current.error_unable_to_perform_this_action;
       case UnAuthenticatedException:
         return AtOnboardingLocalizations.current.error_unable_to_authenticate;
       case NoSuchMethodError:
@@ -38,14 +37,12 @@ class AtOnboardingErrorToString {
             return AtOnboardingLocalizations.current.error_provide_backupKey;
           } else {
             return onboardingService.serverStatus == ServerStatus.activated
-                ? AtOnboardingLocalizations
-                    .current.error_provide_relevant_backupKey
+                ? AtOnboardingLocalizations.current.error_provide_relevant_backupKey
                 : AtOnboardingLocalizations.current.error_provide_valid_QRCode;
           }
         } else if (error == AtOnboardingResponseStatus.timeOut) {
           return AtOnboardingLocalizations.current
-              .error_server_response_timed_out(
-                  AtOnboardingConstants.contactAddress);
+              .error_server_response_timed_out(AtOnboardingConstants.contactAddress);
         } else {
           return '';
         }
@@ -68,16 +65,13 @@ class AtOnboardingErrorToString {
     }
   }
 
-  String pairedAtsign(String? atsign) =>
-      AtOnboardingLocalizations.current.error_atSign_already_paired('$atsign');
+  String pairedAtsign(String? atsign) => AtOnboardingLocalizations.current.error_atSign_already_paired('$atsign');
 
   String atsignMismatch(String? givenAtsign, {bool isQr = false}) {
     if (isQr) {
-      return AtOnboardingLocalizations.current
-          .atSign_mismatches_need_to_provide_QRCode('$givenAtsign');
+      return AtOnboardingLocalizations.current.atSign_mismatches_need_to_provide_QRCode('$givenAtsign');
     } else {
-      return AtOnboardingLocalizations.current
-          .atSign_mismatches_need_to_provide_backupKey('$givenAtsign');
+      return AtOnboardingLocalizations.current.atSign_mismatches_need_to_provide_backupKey('$givenAtsign');
     }
   }
 }

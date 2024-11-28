@@ -1,5 +1,5 @@
+import 'package:at_onboarding_flutter/generated/l10n.dart';
 import 'package:at_onboarding_flutter/src/at_onboarding_result.dart';
-import 'package:at_onboarding_flutter/localizations/generated/l10n.dart';
 import 'package:at_onboarding_flutter/src/services/at_onboarding_config.dart';
 import 'package:at_onboarding_flutter/src/services/sdk_service.dart';
 import 'package:at_onboarding_flutter/src/utils/at_onboarding_dimens.dart';
@@ -14,13 +14,12 @@ class AtOnboardingResetScreen extends StatefulWidget {
   final AtOnboardingConfig config;
 
   const AtOnboardingResetScreen({
-    Key? key,
+    super.key,
     required this.config,
-  }) : super(key: key);
+  });
 
   @override
-  State<AtOnboardingResetScreen> createState() =>
-      _AtOnboardingResetScreenState();
+  State<AtOnboardingResetScreen> createState() => _AtOnboardingResetScreenState();
 }
 
 class _AtOnboardingResetScreenState extends State<AtOnboardingResetScreen> {
@@ -84,9 +83,7 @@ class _AtOnboardingResetScreenState extends State<AtOnboardingResetScreen> {
               ),
             ),
             Expanded(
-              child: atsignsList.isEmpty
-                  ? _buildEmptyWidget()
-                  : _buildAtSignsWidget(theme),
+              child: atsignsList.isEmpty ? _buildEmptyWidget() : _buildAtSignsWidget(theme),
             ),
           ],
         ),
@@ -116,8 +113,7 @@ class _AtOnboardingResetScreenState extends State<AtOnboardingResetScreen> {
           onChanged: (bool? value) {
             isSelectAll = value!;
             if (atsignMap.isNotEmpty) {
-              atsignMap
-                  .updateAll((String? key, bool? value1) => value1 = value);
+              atsignMap.updateAll((String? key, bool? value1) => value1 = value);
             }
             setState(() {});
           },
@@ -180,8 +176,7 @@ class _AtOnboardingResetScreenState extends State<AtOnboardingResetScreen> {
           padding: EdgeInsets.only(
             left: AtOnboardingDimens.paddingNormal,
             right: AtOnboardingDimens.paddingNormal,
-            bottom: AtOnboardingDimens.paddingNormal +
-                MediaQuery.of(context).padding.bottom,
+            bottom: AtOnboardingDimens.paddingNormal + MediaQuery.of(context).padding.bottom,
           ),
           constraints: const BoxConstraints(
             maxWidth: 400,
@@ -224,9 +219,7 @@ class _AtOnboardingResetScreenState extends State<AtOnboardingResetScreen> {
   }
 
   Future<void> showErrorDialog(dynamic errorMessage, {String? title}) async {
-    String? messageString =
-        AtOnboardingErrorToString().getErrorMessage(errorMessage);
-    return AtOnboardingDialog.showError(
-        context: context, message: messageString);
+    String? messageString = AtOnboardingErrorToString().getErrorMessage(errorMessage);
+    return AtOnboardingDialog.showError(context: context, message: messageString);
   }
 }

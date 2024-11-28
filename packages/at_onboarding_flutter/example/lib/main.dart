@@ -38,6 +38,13 @@ class MyAppState extends State<MyApp> {
 
   bool isChangeLanguage = false;
   var _currentLocale = const Locale('en', '');
+  final frenchLocale = const Locale('fr');
+  final englishLocale = const Locale('en');
+  final spanishLocale = const Locale('es');
+  final portugueseLocale = const Locale('pt');
+  final brazillianPortugueseLocale = const Locale('pt', 'BR');
+  final chineseTraditionalLocale = const Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hant', countryCode: 'HK');
+  final chineseSimplifiedLocale = const Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hans', countryCode: 'CN');
 
   @override
   Widget build(BuildContext context) {
@@ -67,9 +74,14 @@ class MyAppState extends State<MyApp> {
             GlobalWidgetsLocalizations.delegate,
             GlobalCupertinoLocalizations.delegate,
           ],
-          supportedLocales: const [
-            Locale('fr'),
-            Locale('en'),
+          supportedLocales: [
+            englishLocale,
+            frenchLocale,
+            spanishLocale,
+            portugueseLocale,
+            brazillianPortugueseLocale,
+            chineseTraditionalLocale,
+            chineseSimplifiedLocale,
           ],
           themeMode: themeMode,
           home: Scaffold(
@@ -177,16 +189,23 @@ class MyAppState extends State<MyApp> {
                       children: <Widget>[
                         const Text("Change language:"),
                         const SizedBox(width: 10),
-                        DropdownButton(
+                        DropdownButton<Locale>(
                           onChanged: (value) {
                             setState(() {
-                              value == 'en' ? _currentLocale = const Locale('en') : _currentLocale = const Locale('fr');
+                              _currentLocale = value!;
                             });
                           },
-                          value: _currentLocale.languageCode,
-                          items: const [
-                            DropdownMenuItem(value: 'en', child: Text('English')),
-                            DropdownMenuItem(value: 'fr', child: Text('French')),
+                          value: _currentLocale,
+                          items: [
+                            DropdownMenuItem(value: englishLocale, child: const Text('English')),
+                            DropdownMenuItem(value: frenchLocale, child: const Text('French')),
+                            DropdownMenuItem(value: spanishLocale, child: const Text('Spanish')),
+                            DropdownMenuItem(value: portugueseLocale, child: const Text('Portuguese')),
+                            DropdownMenuItem(
+                                value: brazillianPortugueseLocale, child: const Text('Brazilian Portuguese')),
+                            DropdownMenuItem(
+                                value: chineseTraditionalLocale, child: const Text('Chinese (Traditional)')),
+                            DropdownMenuItem(value: chineseSimplifiedLocale, child: const Text('Chinese (Simplified)')),
                           ],
                         )
                       ],
