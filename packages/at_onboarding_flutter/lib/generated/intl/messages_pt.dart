@@ -21,13 +21,13 @@ class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'pt';
 
   static String m0(givenAtsign) =>
-      "O @sign não coincide. Por favor, forneça o código QR de ${givenAtsign} para emparelhar.";
+      "O atSign não coincide. Por favor, forneça o código QR de ${givenAtsign} para emparelhar.";
 
   static String m1(givenAtsign) =>
-      "O @sign não coincide. Por favor, forneça o ficheiro de chave de backup de ${givenAtsign} para emparelhar.";
+      "O atSign não coincide. Por favor, forneça o ficheiro de chave de backup de ${givenAtsign} para emparelhar.";
 
   static String m2(atsign) =>
-      "${atsign} já estava emparelhado com este dispositivo. Primeiro remova/redefina este @sign do dispositivo para adicionar.";
+      "O ${atsign} já estava emparelhado com este dispositivo. Primeiro remova/redefina este atSign do dispositivo para adicionar.";
 
   static String m3(contactAddress) =>
       "Tempo de espera de resposta do servidor!\nPor favor, verifique a sua ligação à internet e tente novamente. Contacte ${contactAddress} se o problema persistir.";
@@ -36,20 +36,20 @@ class MessageLookup extends MessageLookupByLibrary {
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "activate": MessageLookupByLibrary.simpleMessage("Ativar"),
         "activate_an_atSign":
-            MessageLookupByLibrary.simpleMessage("Ativar um @sign"),
+            MessageLookupByLibrary.simpleMessage("Ativar um atSign"),
         "already_have_an_atSign":
-            MessageLookupByLibrary.simpleMessage("Já tem um @sign?"),
+            MessageLookupByLibrary.simpleMessage("Já tem um atSign?"),
         "atSign_mismatches_need_to_provide_QRCode": m0,
         "atSign_mismatches_need_to_provide_backupKey": m1,
         "btn_activate_atSign":
-            MessageLookupByLibrary.simpleMessage("Ativar @sign"),
+            MessageLookupByLibrary.simpleMessage("Ativar atSign"),
         "btn_already_have_atSign":
-            MessageLookupByLibrary.simpleMessage("Já tem um @sign?"),
+            MessageLookupByLibrary.simpleMessage("Já tem um atSign?"),
         "btn_cancel": MessageLookupByLibrary.simpleMessage("Cancelar"),
         "btn_close": MessageLookupByLibrary.simpleMessage("Fechar"),
         "btn_continue": MessageLookupByLibrary.simpleMessage("CONTINUAR"),
         "btn_generate_atSign":
-            MessageLookupByLibrary.simpleMessage("Gerar um @sign gratuito"),
+            MessageLookupByLibrary.simpleMessage("Gerar um atSign gratuito"),
         "btn_no": MessageLookupByLibrary.simpleMessage("Não"),
         "btn_pair": MessageLookupByLibrary.simpleMessage("Emparelhar"),
         "btn_refresh": MessageLookupByLibrary.simpleMessage("Atualizar"),
@@ -59,14 +59,14 @@ class MessageLookup extends MessageLookupByLibrary {
         "btn_scan_QRCode":
             MessageLookupByLibrary.simpleMessage("Ler código QR"),
         "btn_skip_tutorial":
-            MessageLookupByLibrary.simpleMessage("SKIP TUTORIAL"),
+            MessageLookupByLibrary.simpleMessage("Saltar Tutorial"),
         "btn_upload_QRCode":
             MessageLookupByLibrary.simpleMessage("Carregar código QR"),
         "btn_yes": MessageLookupByLibrary.simpleMessage("Sim"),
         "btn_yes_continue":
             MessageLookupByLibrary.simpleMessage("Sim, continuar"),
         "enter_atSign_need_to_activate": MessageLookupByLibrary.simpleMessage(
-            "Introduza o @sign que pretende ativar"),
+            "Introduza o atSign que pretende ativar"),
         "enter_code": MessageLookupByLibrary.simpleMessage(
             "Por favor, introduza o código de verificação de 4 caracteres que foi enviado para o seu endereço de e-mail"),
         "enter_verification_code": MessageLookupByLibrary.simpleMessage(
@@ -76,10 +76,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "error_activate_server": MessageLookupByLibrary.simpleMessage(
             "Não foi possível ativar o servidor. Contacte o administrador."),
         "error_atSign_activated": MessageLookupByLibrary.simpleMessage(
-            "Este @sign já foi ativado. Carregue as suas atKeys para emparelhar com este dispositivo"),
+            "Este atSign já foi ativado. Carregue as suas atKeys para emparelhar com este dispositivo"),
         "error_atSign_already_paired": m2,
         "error_atSign_logged": MessageLookupByLibrary.simpleMessage(
-            "Este @sign já foi ativado e emparelhado com este dispositivo"),
+            "Este atSign já foi ativado e emparelhado com este dispositivo"),
         "error_authenticated_failed":
             MessageLookupByLibrary.simpleMessage("Autenticação falhou"),
         "error_enter_valid_email": MessageLookupByLibrary.simpleMessage(
@@ -87,7 +87,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "error_incorrect_QRFile":
             MessageLookupByLibrary.simpleMessage("Ficheiro QR incorreto"),
         "error_invalid_atSign_provided": MessageLookupByLibrary.simpleMessage(
-            "O @sign fornecido é inválido. Contacte o administrador."),
+            "O atSign fornecido é inválido. Contacte o administrador."),
         "error_perform_operation": MessageLookupByLibrary.simpleMessage(
             "Não foi possível realizar a operação de leitura/escrita. Por favor, tente novamente."),
         "error_please_enter_email": MessageLookupByLibrary.simpleMessage(
@@ -120,47 +120,47 @@ class MessageLookup extends MessageLookupByLibrary {
         "error_unknown":
             MessageLookupByLibrary.simpleMessage("Erro desconhecido."),
         "get_free_atSign":
-            MessageLookupByLibrary.simpleMessage("Obter um @sign gratuito"),
+            MessageLookupByLibrary.simpleMessage("Obter um atSign gratuito"),
         "have_QRCode":
             MessageLookupByLibrary.simpleMessage("Tem um código QR?"),
         "images": MessageLookupByLibrary.simpleMessage("imagens"),
         "invalid_QR": MessageLookupByLibrary.simpleMessage("QR inválido."),
         "learn_about_atSign":
-            MessageLookupByLibrary.simpleMessage("Saiba mais sobre @signs"),
+            MessageLookupByLibrary.simpleMessage("Saiba mais sobre atSign"),
         "learn_more": MessageLookupByLibrary.simpleMessage("Saiba mais"),
         "loading_atSigns":
-            MessageLookupByLibrary.simpleMessage("A carregar @signs"),
+            MessageLookupByLibrary.simpleMessage("A carregar atSign"),
         "msg_action_cannot_undone": MessageLookupByLibrary.simpleMessage(
             "Atenção: Esta ação não pode ser desfeita"),
         "msg_atSign_cannot_empty": MessageLookupByLibrary.simpleMessage(
-            "O @sign não pode estar vazio"),
+            "O atSign não pode estar vazio"),
         "msg_atSign_not_registered": MessageLookupByLibrary.simpleMessage(
-            "O seu @sign ainda não está registado. Por favor, tente com um registado."),
+            "O seu atSign ainda não está registado. Por favor, tente com um registado."),
         "msg_atSign_required":
-            MessageLookupByLibrary.simpleMessage("É necessário um @sign."),
+            MessageLookupByLibrary.simpleMessage("É necessário um atSign."),
         "msg_atSign_unreachable": MessageLookupByLibrary.simpleMessage(
-            "O seu @sign e o servidor são inacessíveis. Por favor, tente novamente ou contacte support@atsign.com"),
+            "O seu atSign e o servidor são inacessíveis. Por favor, tente novamente ou contacte support@atsign.com"),
         "msg_auth_failed":
             MessageLookupByLibrary.simpleMessage("Autenticação falhou"),
         "msg_cannot_fetch_keys_from_chosen_file":
             MessageLookupByLibrary.simpleMessage(
                 "Não foi possível obter as chaves do ficheiro selecionado. Por favor, selecione o ficheiro correto"),
         "msg_maximum_atSign_next": MessageLookupByLibrary.simpleMessage(
-            " para selecionar um dos seus @signs existentes."),
+            " para selecionar um dos seus atSigns existentes."),
         "msg_maximum_atSign_prev": MessageLookupByLibrary.simpleMessage(
-            "Ops! Já tem o número máximo de @signs gratuitos. Por favor, faça login em "),
+            "Ops! Já tem o número máximo de atSigns gratuitos. Por favor, faça login em "),
         "msg_refresh_atSign": MessageLookupByLibrary.simpleMessage(
-            "Atualize até ver um @sign que goste, depois carregue em Emparelhar"),
+            "Atualize até ver um atSign que goste, depois carregue em Emparelhar"),
         "msg_response_time_out":
             MessageLookupByLibrary.simpleMessage("Tempo limite de resposta"),
         "msg_save_atKey_in_secure_location": MessageLookupByLibrary.simpleMessage(
             "Por favor, guarde a sua chave num local seguro (recomendamos Google Drive ou iCloud Drive). Vai precisar dela para voltar a iniciar sessão E usar outras aplicações atPlatform."),
         "msg_shared_storage": MessageLookupByLibrary.simpleMessage(
-            "Isto poupará o processo de integrar este @sign noutras aplicações novamente."),
+            "Isto poupará o processo de integrar este atSign noutras aplicações novamente."),
         "msg_wait_fetching_atSign": MessageLookupByLibrary.simpleMessage(
-            "Por favor, aguarde enquanto obtemos o estado do @sign"),
+            "Por favor, aguarde enquanto obtemos o estado do atSign"),
         "no_atSigns_paired_to_reset": MessageLookupByLibrary.simpleMessage(
-            "Não existem @signs emparelhados para redefinir. "),
+            "Não existem atSigns emparelhados para redefinir. "),
         "no_permission": MessageLookupByLibrary.simpleMessage("Sem permissão"),
         "note": MessageLookupByLibrary.simpleMessage("Nota:"),
         "note_otp_content": MessageLookupByLibrary.simpleMessage(
@@ -170,28 +170,28 @@ class MessageLookup extends MessageLookupByLibrary {
         "notice": MessageLookupByLibrary.simpleMessage("Aviso"),
         "onboarding": MessageLookupByLibrary.simpleMessage("Integração"),
         "pair_atSign": MessageLookupByLibrary.simpleMessage(
-            "Emparelhar um @sign usando as suas atKeys"),
+            "Emparelhar um atSign usando as suas atKeys"),
         "processing": MessageLookupByLibrary.simpleMessage("A processar..."),
         "remove": MessageLookupByLibrary.simpleMessage("Remover"),
         "resend_code": MessageLookupByLibrary.simpleMessage("Reenviar código"),
         "reset": MessageLookupByLibrary.simpleMessage("Redefinir"),
         "reset_description": MessageLookupByLibrary.simpleMessage(
-            "Isto irá remover o @sign selecionado e os seus detalhes apenas desta aplicação."),
+            "Isto irá remover o atSign selecionado e os seus detalhes apenas desta aplicação."),
         "scan_your_QR": MessageLookupByLibrary.simpleMessage("Leia o seu QR!"),
         "select_all": MessageLookupByLibrary.simpleMessage("Selecionar tudo"),
         "select_atSign":
-            MessageLookupByLibrary.simpleMessage("Selecionar @signs"),
+            MessageLookupByLibrary.simpleMessage("Selecionar atSigns"),
         "select_atSign_to_reset": MessageLookupByLibrary.simpleMessage(
-            "Por favor, selecione pelo menos um @sign para redefinir"),
+            "Por favor, selecione pelo menos um atSign para redefinir"),
         "send_code": MessageLookupByLibrary.simpleMessage("Enviar código"),
         "sub_upload_atKeys": MessageLookupByLibrary.simpleMessage(
-            "Carregue o seu ficheiro atKey. Este ficheiro foi gerado quando ativou e emparelhou o seu @sign e foi-lhe pedido para o guardar num local seguro."),
+            "Carregue o seu ficheiro atKey. Este ficheiro foi gerado quando ativou e emparelhou o seu atSign e foi-lhe pedido para o guardar num local seguro."),
         "title_FAQ": MessageLookupByLibrary.simpleMessage("FAQ"),
         "title_activate_an_atSign":
-            MessageLookupByLibrary.simpleMessage("Ativar um @sign?"),
+            MessageLookupByLibrary.simpleMessage("Ativar um atSign?"),
         "title_important": MessageLookupByLibrary.simpleMessage("IMPORTANTE!"),
         "title_intro": MessageLookupByLibrary.simpleMessage(
-            "Esta aplicação foi construída na plataforma atPlatform. Todas as aplicações atPlatform requerem um @sign. "),
+            "Esta aplicação foi construída na plataforma atPlatform. Todas as aplicações atPlatform requerem um atSign. "),
         "title_pair_atSign_next": MessageLookupByLibrary.simpleMessage(
             "para emparelhar com este dispositivo"),
         "title_pair_atSign_prev":
@@ -199,27 +199,27 @@ class MessageLookup extends MessageLookupByLibrary {
         "title_save_your_key":
             MessageLookupByLibrary.simpleMessage("Guarde a sua chave"),
         "title_select_atSign": MessageLookupByLibrary.simpleMessage(
-            "Já tem alguns @signs existentes. Por favor, selecione um @sign ou continue com um novo."),
+            "Já tem alguns atSigns existentes. Por favor, selecione um atSign ou continue com um novo."),
         "title_session_expired":
             MessageLookupByLibrary.simpleMessage("A sua sessão expirou"),
         "title_setting_up_your_atSign":
-            MessageLookupByLibrary.simpleMessage("A configurar o seu @sign"),
+            MessageLookupByLibrary.simpleMessage("A configurar o seu atSign"),
         "title_shared_storage": MessageLookupByLibrary.simpleMessage(
-            "Deseja partilhar este @sign integrado com outras aplicações na atPlatform?"),
+            "Deseja partilhar este atSign integrado com outras aplicações na atPlatform?"),
         "tutorial_activate_your_atSign": MessageLookupByLibrary.simpleMessage(
-            "Toque aqui para ativar o seu @sign"),
+            "Toque aqui para ativar o seu atSign"),
         "tutorial_generate_atSign": MessageLookupByLibrary.simpleMessage(
-            "Toque para gerar um novo @sign gratuito"),
+            "Toque para gerar um novo atSign gratuito"),
         "tutorial_get_atSign": MessageLookupByLibrary.simpleMessage(
-            "Se não tem um @sign, toque aqui para obter um"),
+            "Se não tem um atSign, toque aqui para obter um"),
         "tutorial_scan_QRCode":
             MessageLookupByLibrary.simpleMessage("Toque para ler o código QR"),
         "tutorial_upload_atSign_key": MessageLookupByLibrary.simpleMessage(
-            "Se tem um @sign, toque para carregar a chave do @sign"),
+            "Se tem um atSign, toque para carregar a chave do atSign"),
         "tutorial_upload_image_QRCode": MessageLookupByLibrary.simpleMessage(
             "Toque para carregar a imagem do código QR"),
         "tutorial_upload_your_atKey": MessageLookupByLibrary.simpleMessage(
-            "Se tem um @sign ativado, toque para carregar as suas atKeys"),
+            "Se tem um atSign ativado, toque para carregar as suas atKeys"),
         "upload_atKeys":
             MessageLookupByLibrary.simpleMessage("Carregar atKeys"),
         "verification_code_has_been_sent_to":
