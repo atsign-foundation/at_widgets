@@ -1,6 +1,7 @@
-import 'package:at_onboarding_flutter/localizations/generated/l10n.dart';
-import '../widgets/at_onboarding_button.dart';
+import 'package:at_onboarding_flutter/generated/l10n.dart';
 import 'package:flutter/material.dart';
+
+import '../widgets/at_onboarding_button.dart';
 
 class AtOnboardingDialog extends StatefulWidget {
   static Future showError({
@@ -42,12 +43,12 @@ class AtOnboardingDialog extends StatefulWidget {
   final List<Widget> actions;
 
   const AtOnboardingDialog({
-    Key? key,
+    super.key,
     required this.title,
     required this.message,
     required this.actions,
     this.subMessage,
-  }) : super(key: key);
+  });
 
   @override
   State<AtOnboardingDialog> createState() => _AtOnboardingDialogState();

@@ -17,20 +17,44 @@ import 'package:intl/message_lookup_by_library.dart';
 import 'package:intl/src/intl_helpers.dart';
 
 import 'messages_en.dart' as messages_en;
+import 'messages_es.dart' as messages_es;
 import 'messages_fr.dart' as messages_fr;
+import 'messages_pt.dart' as messages_pt;
+import 'messages_pt_BR.dart' as messages_pt_br;
+import 'messages_zh.dart' as messages_zh;
+import 'messages_zh_Hans_CH.dart' as messages_zh_hans_ch;
+import 'messages_zh_Hant_HK.dart' as messages_zh_hant_hk;
 
 typedef Future<dynamic> LibraryLoader();
 Map<String, LibraryLoader> _deferredLibraries = {
   'en': () => new SynchronousFuture(null),
+  'es': () => new SynchronousFuture(null),
   'fr': () => new SynchronousFuture(null),
+  'pt': () => new SynchronousFuture(null),
+  'pt_BR': () => new SynchronousFuture(null),
+  'zh': () => new SynchronousFuture(null),
+  'zh_Hans_CH': () => new SynchronousFuture(null),
+  'zh_Hant_HK': () => new SynchronousFuture(null),
 };
 
 MessageLookupByLibrary? _findExact(String localeName) {
   switch (localeName) {
     case 'en':
       return messages_en.messages;
+    case 'es':
+      return messages_es.messages;
     case 'fr':
       return messages_fr.messages;
+    case 'pt':
+      return messages_pt.messages;
+    case 'pt_BR':
+      return messages_pt_br.messages;
+    case 'zh':
+      return messages_zh.messages;
+    case 'zh_Hans_CH':
+      return messages_zh_hans_ch.messages;
+    case 'zh_Hant_HK':
+      return messages_zh_hant_hk.messages;
     default:
       return null;
   }

@@ -1,16 +1,16 @@
 import 'dart:io';
 
 import 'package:at_client_mobile/at_client_mobile.dart';
+import 'package:at_onboarding_flutter/generated/l10n.dart';
 import 'package:at_onboarding_flutter/src/at_onboarding_result.dart';
-import 'package:at_onboarding_flutter/localizations/generated/l10n.dart';
 import 'package:at_onboarding_flutter/src/screen/at_onboarding_activate_screen.dart';
 import 'package:at_onboarding_flutter/src/screen/at_onboarding_backup_screen.dart';
 import 'package:at_onboarding_flutter/src/screen/at_onboarding_generate_screen.dart';
 import 'package:at_onboarding_flutter/src/screen/at_onboarding_input_atsign_screen.dart';
 import 'package:at_onboarding_flutter/src/screen/at_onboarding_reference_screen.dart';
+import 'package:at_onboarding_flutter/src/services/at_keys_file_upload_service.dart';
 import 'package:at_onboarding_flutter/src/services/at_onboarding_config.dart';
 import 'package:at_onboarding_flutter/src/services/at_onboarding_tutorial_service.dart';
-import 'package:at_onboarding_flutter/src/services/at_keys_file_upload_service.dart';
 import 'package:at_onboarding_flutter/src/services/onboarding_service.dart';
 import 'package:at_onboarding_flutter/src/utils/at_onboarding_dimens.dart';
 import 'package:at_onboarding_flutter/src/utils/at_onboarding_error_util.dart';
@@ -76,10 +76,8 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
   String? _pairingAtsign;
 
   ServerStatus? atSignStatus;
-  final String _incorrectKeyFile =
-      AtOnboardingLocalizations.current.msg_cannot_fetch_keys_from_chosen_file;
-  final String _failedFileProcessing =
-      AtOnboardingLocalizations.current.error_processing_files;
+  final String _incorrectKeyFile = AtOnboardingLocalizations.current.msg_cannot_fetch_keys_from_chosen_file;
+  final String _failedFileProcessing = AtOnboardingLocalizations.current.error_processing_files;
 
   late AtSyncDialog _inprogressDialog;
 
@@ -140,8 +138,7 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
                 // width: _dialogWidth,
                 decoration: BoxDecoration(
                     color: theme.primaryColor.withOpacity(0.1),
-                    borderRadius:
-                        BorderRadius.circular(AtOnboardingDimens.borderRadius)),
+                    borderRadius: BorderRadius.circular(AtOnboardingDimens.borderRadius)),
                 padding: const EdgeInsets.all(AtOnboardingDimens.paddingNormal),
                 margin: const EdgeInsets.all(AtOnboardingDimens.paddingNormal),
                 constraints: const BoxConstraints(
@@ -203,10 +200,8 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              AtOnboardingLocalizations
-                                  .current.btn_activate_atSign,
-                              style: const TextStyle(
-                                  fontSize: AtOnboardingDimens.fontLarge),
+                              AtOnboardingLocalizations.current.btn_activate_atSign,
+                              style: const TextStyle(fontSize: AtOnboardingDimens.fontLarge),
                             ),
                             const Icon(Icons.arrow_right_alt_rounded)
                           ],
@@ -227,9 +222,7 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
                                     required String secret,
                                   }) {
                                     String cramSecret = secret.split(':').last;
-                                    String atsign = atSign.startsWith('@')
-                                        ? atSign
-                                        : '@$atSign';
+                                    String atsign = atSign.startsWith('@') ? atSign : '@$atSign';
                                     _processSharedSecret(atsign, cramSecret);
                                   },
                                   config: widget.config,
@@ -292,8 +285,8 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
   String decodeQrCode(String imagepath) {
     var image = img.decodePng(File(imagepath).readAsBytesSync())!;
 
-    LuminanceSource source = RGBLuminanceSource(image.width, image.height,
-        image.getBytes(order: img.ChannelOrder.abgr).buffer.asInt32List());
+    LuminanceSource source = RGBLuminanceSource(
+        image.width, image.height, image.getBytes(order: img.ChannelOrder.abgr).buffer.asInt32List());
     var bitmap = BinaryBitmap(HybridBinarizer(source));
 
     var reader = QRCodeReader();
@@ -352,8 +345,7 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
                 child: Text(
                   (Platform.isAndroid || Platform.isIOS)
                       ? AtOnboardingLocalizations.current.tutorial_scan_QRCode
-                      : AtOnboardingLocalizations
-                          .current.tutorial_upload_image_QRCode,
+                      : AtOnboardingLocalizations.current.tutorial_upload_image_QRCode,
                   style: const TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.w500,
@@ -381,8 +373,7 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
             builder: (context, controller) {
               return Center(
                 child: Text(
-                  AtOnboardingLocalizations
-                      .current.tutorial_activate_your_atSign,
+                  AtOnboardingLocalizations.current.tutorial_activate_your_atSign,
                   style: const TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.w500,
@@ -429,8 +420,7 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
   }
 
   Future<void> showErrorDialog(String? errorMessage) async {
-    return AtOnboardingDialog.showError(
-        context: context, message: errorMessage ?? '');
+    return AtOnboardingDialog.showError(context: context, message: errorMessage ?? '');
   }
 
   bool skipTutorial() {
@@ -442,15 +432,13 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
     if (widget.config.tutorialDisplay == AtOnboardingTutorialDisplay.always) {
       await Future.delayed(const Duration(milliseconds: 300));
       _showTutorial();
-    } else if (widget.config.tutorialDisplay ==
-        AtOnboardingTutorialDisplay.never) {
+    } else if (widget.config.tutorialDisplay == AtOnboardingTutorialDisplay.never) {
       return;
     } else {
       final result = await AtOnboardingTutorialService.checkShowTutorial();
       if (!result) {
         await Future.delayed(const Duration(milliseconds: 300));
-        final result =
-            await AtOnboardingTutorialService.hasShowTutorialSignIn();
+        final result = await AtOnboardingTutorialService.hasShowTutorialSignIn();
         if (!result) {
           _showTutorial();
         }
@@ -471,8 +459,7 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
     await _checkShowTutorial();
   }
 
-  Future<dynamic> _processSharedSecret(String atsign, String secret,
-      {bool retry = true}) async {
+  Future<dynamic> _processSharedSecret(String atsign, String secret, {bool retry = true}) async {
     dynamic authResponse;
     try {
       _inprogressDialog.show(
@@ -482,19 +469,16 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
       bool isExist = await _onboardingService.isExistingAtsign(atsign);
       if (isExist) {
         _inprogressDialog.close();
-        await _showAlertDialog(
-            AtOnboardingErrorToString().pairedAtsign(atsign));
+        await _showAlertDialog(AtOnboardingErrorToString().pairedAtsign(atsign));
         return;
       }
 
       //Delay for waiting for ServerStatus change to teapot when activating an atsign
       await Future.delayed(const Duration(seconds: 10));
 
-      _onboardingService.setAtClientPreference =
-          widget.config.atClientPreference;
+      _onboardingService.setAtClientPreference = widget.config.atClientPreference;
 
-      authResponse = await _onboardingService.authenticate(atsign,
-          cramSecret: secret, status: widget.onboardStatus);
+      authResponse = await _onboardingService.authenticate(atsign, cramSecret: secret, status: widget.onboardStatus);
 
       int round = 1;
       atSignStatus = await _onboardingService.checkAtSignServerStatus(atsign);
@@ -606,10 +590,8 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
   }
 
   Future<void> _showAlertDialog(dynamic errorMessage, {String? title}) async {
-    String? messageString =
-        AtOnboardingErrorToString().getErrorMessage(errorMessage);
-    return AtOnboardingDialog.showError(
-        context: context, title: title, message: messageString);
+    String? messageString = AtOnboardingErrorToString().getErrorMessage(errorMessage);
+    return AtOnboardingDialog.showError(context: context, title: title, message: messageString);
   }
 
   void _showReferenceWebview() {
@@ -658,8 +640,7 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
 
   Future<void> _uploadKeyFile() async {
     await checkPermissions();
-    Stream<FileUploadStatus> statusStream =
-        filePicker.uploadKeyFile(_pairingAtsign);
+    Stream<FileUploadStatus> statusStream = filePicker.uploadKeyFile(_pairingAtsign);
     statusStream.listen((status) async {
       switch (status) {
         case FilePickingInProgress():
@@ -675,8 +656,7 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
           await showErrorDialog(_incorrectKeyFile);
           break;
         case ErrorAtSignMismatch():
-          await showErrorDialog(
-              AtOnboardingErrorToString().atsignMismatch(_pairingAtsign));
+          await showErrorDialog(AtOnboardingErrorToString().atsignMismatch(_pairingAtsign));
           break;
         case ErrorFailedFileProcessing():
           await showErrorDialog(_failedFileProcessing);
@@ -689,8 +669,7 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
         // Non constant status, so use _ for pattern match
         case ErrorPairedAtsign _:
           _inprogressDialog.close();
-          await showErrorDialog(
-              AtOnboardingErrorToString().pairedAtsign(status.atSign));
+          await showErrorDialog(AtOnboardingErrorToString().pairedAtsign(status.atSign));
           break;
         case ProcessingAesKeyDone():
           _inprogressDialog.close();
@@ -715,8 +694,7 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
           //Don't show backup key for case user upload backup key
           // await AtOnboardingBackupScreen.push(context: context);
           if (!mounted) return;
-          Navigator.pop(
-              context, AtOnboardingResult.success(atsign: status.atSign!));
+          Navigator.pop(context, AtOnboardingResult.success(atsign: status.atSign!));
       }
     }, onDone: () {
       setState(() {

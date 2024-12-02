@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:at_onboarding_flutter/localizations/generated/l10n.dart';
+import 'package:at_onboarding_flutter/generated/l10n.dart';
 import 'package:at_onboarding_flutter/src/at_onboarding_result.dart';
 import 'package:at_onboarding_flutter/src/screen/at_onboarding_activate_screen.dart';
 import 'package:at_onboarding_flutter/src/screen/at_onboarding_intro_screen.dart';
@@ -27,10 +27,8 @@ class AtOnboarding {
     bool isSwitchingAtsign = false,
     String? atsign,
   }) async {
-    AtOnboardingConstants.setApiKey(config.appAPIKey ??
-        (AtOnboardingConstants.rootEnvironment.apikey ?? ''));
-    AtOnboardingConstants.rootDomain =
-        config.domain ?? AtOnboardingConstants.rootEnvironment.domain;
+    AtOnboardingConstants.setApiKey(config.appAPIKey ?? (AtOnboardingConstants.rootEnvironment.apikey ?? ''));
+    AtOnboardingConstants.rootDomain = config.domain ?? AtOnboardingConstants.rootEnvironment.domain;
 
     /// Initial Setup
     await _initialSetup(context);
@@ -86,8 +84,7 @@ class AtOnboarding {
 
       if (result is AtOnboardingResult) {
         //Update primary atsign after onboard success
-        if (result.status == AtOnboardingResultStatus.success &&
-            result.atsign != null) {
+        if (result.status == AtOnboardingResultStatus.success && result.atsign != null) {
           await changePrimaryAtsign(atsign: result.atsign!);
         }
         return result;
@@ -126,8 +123,7 @@ class AtOnboarding {
   }
 
   static Future<bool> changePrimaryAtsign({required String atsign}) async {
-    return await OnboardingService.getInstance()
-        .changePrimaryAtsign(atsign: atsign);
+    return await OnboardingService.getInstance().changePrimaryAtsign(atsign: atsign);
   }
 
   static Future<AtOnboardingResetResult> reset({
@@ -138,8 +134,7 @@ class AtOnboarding {
     await _initialSetup(context);
 
     if (context.mounted) {
-      final result = await Navigator.push(context,
-          MaterialPageRoute(builder: (BuildContext context) {
+      final result = await Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
         return AtOnboardingResetScreen(config: config);
       }));
 
@@ -156,8 +151,7 @@ class AtOnboarding {
       throw UnsupportedError('user sharing not supported');
     }
 
-    final result =
-        await OnboardingService.getInstance().enableUsingSharedStorage();
+    final result = await OnboardingService.getInstance().enableUsingSharedStorage();
     return result;
   }
 
@@ -166,8 +160,7 @@ class AtOnboarding {
       throw UnsupportedError('user sharing not supported');
     }
 
-    final result =
-        await OnboardingService.getInstance().disableUsingSharedStorage();
+    final result = await OnboardingService.getInstance().disableUsingSharedStorage();
     return result;
   }
 
