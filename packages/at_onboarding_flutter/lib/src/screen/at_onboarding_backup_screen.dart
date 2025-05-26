@@ -15,13 +15,12 @@ class AtOnboardingBackupScreen extends StatefulWidget {
   final AtOnboardingConfig config;
 
   const AtOnboardingBackupScreen({
-    Key? key,
+    super.key,
     required this.config,
   }) : super(key: key);
 
   @override
-  State<AtOnboardingBackupScreen> createState() =>
-      _AtOnboardingBackupScreenState();
+  State<AtOnboardingBackupScreen> createState() => _AtOnboardingBackupScreenState();
 }
 
 class _AtOnboardingBackupScreenState extends State<AtOnboardingBackupScreen> {
@@ -86,8 +85,7 @@ class _AtOnboardingBackupScreenState extends State<AtOnboardingBackupScreen> {
               ),
               const SizedBox(height: 10),
               Text(
-                AtOnboardingLocalizations
-                    .current.msg_save_atKey_in_secure_location,
+                AtOnboardingLocalizations.current.msg_save_atKey_in_secure_location,
                 style: const TextStyle(fontSize: AtOnboardingDimens.fontNormal),
                 textAlign: TextAlign.center,
               ),
@@ -98,12 +96,8 @@ class _AtOnboardingBackupScreenState extends State<AtOnboardingBackupScreen> {
               Center(
                 child: Image.asset(
                   AtOnboardingStrings.backupZip,
-                  height: Platform.isAndroid || Platform.isIOS
-                      ? MediaQuery.of(context).size.height * 0.3
-                      : 250,
-                  width: Platform.isAndroid || Platform.isIOS
-                      ? MediaQuery.of(context).size.height * 0.3
-                      : 250,
+                  height: Platform.isAndroid || Platform.isIOS ? MediaQuery.of(context).size.height * 0.3 : 250,
+                  width: Platform.isAndroid || Platform.isIOS ? MediaQuery.of(context).size.height * 0.3 : 250,
                   fit: BoxFit.fill,
                   package: AtOnboardingConstants.package,
                   color: theme.iconTheme.color,

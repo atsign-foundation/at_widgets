@@ -20,13 +20,12 @@ class AtOnboardingIntroScreen extends StatefulWidget {
   final AtOnboardingConfig config;
 
   const AtOnboardingIntroScreen({
-    Key? key,
+    super.key,
     required this.config,
-  }) : super(key: key);
+  });
 
   @override
-  State<AtOnboardingIntroScreen> createState() =>
-      _AtOnboardingIntroScreenState();
+  State<AtOnboardingIntroScreen> createState() => _AtOnboardingIntroScreenState();
 }
 
 class _AtOnboardingIntroScreenState extends State<AtOnboardingIntroScreen> {
@@ -60,8 +59,7 @@ class _AtOnboardingIntroScreenState extends State<AtOnboardingIntroScreen> {
             child: Container(
               decoration: BoxDecoration(
                   color: theme.primaryColor.withOpacity(0.1),
-                  borderRadius:
-                      BorderRadius.circular(AtOnboardingDimens.borderRadius)),
+                  borderRadius: BorderRadius.circular(AtOnboardingDimens.borderRadius)),
               padding: const EdgeInsets.all(AtOnboardingDimens.paddingNormal),
               margin: const EdgeInsets.all(AtOnboardingDimens.paddingNormal),
               constraints: const BoxConstraints(
@@ -85,8 +83,7 @@ class _AtOnboardingIntroScreenState extends State<AtOnboardingIntroScreen> {
                             color: theme.primaryColor,
                             decoration: TextDecoration.underline,
                           ),
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = _showReferenceWebview,
+                          recognizer: TapGestureRecognizer()..onTap = _showReferenceWebview,
                         ),
                       ],
                     ),

@@ -37,23 +37,19 @@ class AtOnboardingReferenceScreen extends StatefulWidget {
   final AtOnboardingConfig config;
 
   const AtOnboardingReferenceScreen({
-    Key? key,
+    super.key,
     this.url,
     this.title,
     required this.config,
-  }) : super(key: key);
+  });
 
   @override
-  State<AtOnboardingReferenceScreen> createState() =>
-      _AtOnboardingReferenceScreenState();
+  State<AtOnboardingReferenceScreen> createState() => _AtOnboardingReferenceScreenState();
 }
 
-class _AtOnboardingReferenceScreenState
-    extends State<AtOnboardingReferenceScreen> {
+class _AtOnboardingReferenceScreenState extends State<AtOnboardingReferenceScreen> {
   late bool isLoading;
-  final Set<Factory<OneSequenceGestureRecognizer>> gestureRecognizers = {
-    Factory(() => EagerGestureRecognizer())
-  };
+  final Set<Factory<OneSequenceGestureRecognizer>> gestureRecognizers = {Factory(() => EagerGestureRecognizer())};
   late WebViewController webViewController;
 
   @override

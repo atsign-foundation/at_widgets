@@ -27,13 +27,12 @@ class AtOnboardingQRCodeScreen extends StatefulWidget {
   final AtOnboardingConfig config;
 
   const AtOnboardingQRCodeScreen({
-    Key? key,
+    super.key,
     required this.config,
-  }) : super(key: key);
+  });
 
   @override
-  State<AtOnboardingQRCodeScreen> createState() =>
-      _AtOnboardingQRCodeScreenState();
+  State<AtOnboardingQRCodeScreen> createState() => _AtOnboardingQRCodeScreenState();
 }
 
 class _AtOnboardingQRCodeScreenState extends State<AtOnboardingQRCodeScreen> {
@@ -136,10 +135,8 @@ class _AtOnboardingQRCodeScreenState extends State<AtOnboardingQRCodeScreen> {
 
   Widget _buildQrView(ThemeData theme) {
     // For this example we check how width or tall the device is and change the scanArea and overlay accordingly.
-    var scanArea = (MediaQuery.of(context).size.width < 400 ||
-            MediaQuery.of(context).size.height < 400)
-        ? 250.0
-        : 300.0;
+    var scanArea =
+        (MediaQuery.of(context).size.width < 400 || MediaQuery.of(context).size.height < 400) ? 250.0 : 300.0;
     // To ensure the Scanner view is properly sizes after rotation
     // we need to listen for Flutter SizeChanged notification and update controller
     return QRView(

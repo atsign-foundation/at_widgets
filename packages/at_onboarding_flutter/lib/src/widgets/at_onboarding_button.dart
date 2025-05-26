@@ -12,7 +12,7 @@ abstract class AtOnboardingButton extends StatelessWidget {
   final Widget child;
 
   const AtOnboardingButton({
-    Key? key,
+    super.key,
     required this.backgroundColor,
     required this.borderColor,
     required this.height,
@@ -21,31 +21,21 @@ abstract class AtOnboardingButton extends StatelessWidget {
     required this.isLoading,
     required this.onPressed,
     required this.child,
-  }) : super(key: key);
+  });
 }
 
 class AtOnboardingPrimaryButton extends AtOnboardingButton {
   const AtOnboardingPrimaryButton({
-    Key? key,
-    Color? backgroundColor,
-    Color? borderColor,
-    double? height,
-    double? width,
-    double? borderRadius,
-    bool isLoading = false,
-    VoidCallback? onPressed,
-    required Widget child,
-  }) : super(
-          key: key,
-          backgroundColor: backgroundColor,
-          borderColor: borderColor,
-          height: height,
-          width: width,
-          borderRadius: borderRadius,
-          isLoading: isLoading,
-          onPressed: onPressed,
-          child: child,
-        );
+    super.key,
+    super.backgroundColor,
+    super.borderColor,
+    super.height,
+    super.width,
+    super.borderRadius,
+    super.isLoading = false,
+    super.onPressed,
+    required super.child,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -74,26 +64,16 @@ class AtOnboardingPrimaryButton extends AtOnboardingButton {
 
 class AtOnboardingSecondaryButton extends AtOnboardingButton {
   const AtOnboardingSecondaryButton({
-    Key? key,
-    Color? backgroundColor,
-    Color? borderColor,
-    double? height,
-    double? width,
-    double? borderRadius,
-    bool isLoading = false,
-    VoidCallback? onPressed,
-    required Widget child,
-  }) : super(
-          key: key,
-          backgroundColor: backgroundColor,
-          borderColor: borderColor,
-          height: height,
-          width: width,
-          borderRadius: borderRadius,
-          isLoading: isLoading,
-          onPressed: onPressed,
-          child: child,
-        );
+    super.key,
+    super.backgroundColor,
+    super.borderColor,
+    super.height,
+    super.width,
+    super.borderRadius,
+    super.isLoading = false,
+    super.onPressed,
+    required super.child,
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -33,12 +33,12 @@ class AtOnboardingPairScreen extends StatefulWidget {
   final AtOnboardingConfig config;
 
   const AtOnboardingPairScreen({
-    Key? key,
+    super.key,
     required this.atSign,
     required this.hideReferences,
     required this.onGenerateSuccess,
     required this.config,
-  }) : super(key: key);
+  });
 
   @override
   State<AtOnboardingPairScreen> createState() => _AtOnboardingPairScreenState();
@@ -89,8 +89,7 @@ class _AtOnboardingPairScreenState extends State<AtOnboardingPairScreen> {
               child: Container(
                 decoration: BoxDecoration(
                     color: theme.primaryColor.withOpacity(0.1),
-                    borderRadius:
-                        BorderRadius.circular(AtOnboardingDimens.borderRadius)),
+                    borderRadius: BorderRadius.circular(AtOnboardingDimens.borderRadius)),
                 padding: const EdgeInsets.all(AtOnboardingDimens.paddingNormal),
                 margin: const EdgeInsets.all(AtOnboardingDimens.paddingNormal),
                 constraints: const BoxConstraints(
@@ -102,8 +101,7 @@ class _AtOnboardingPairScreenState extends State<AtOnboardingPairScreen> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      AtOnboardingLocalizations
-                          .current.enter_your_email_address,
+                      AtOnboardingLocalizations.current.enter_your_email_address,
                       style: const TextStyle(
                         fontSize: AtOnboardingDimens.fontLarge,
                         fontWeight: FontWeight.bold,
@@ -115,8 +113,7 @@ class _AtOnboardingPairScreenState extends State<AtOnboardingPairScreen> {
                       focusNode: _focusNode,
                       validator: (String? value) {
                         if ((value ?? '').isEmpty) {
-                          return AtOnboardingLocalizations
-                              .current.msg_atSign_cannot_empty;
+                          return AtOnboardingLocalizations.current.msg_atSign_cannot_empty;
                         }
                         return null;
                       },
@@ -124,9 +121,7 @@ class _AtOnboardingPairScreenState extends State<AtOnboardingPairScreen> {
                       inputFormatters: <TextInputFormatter>[
                         LengthLimitingTextInputFormatter(80),
                         // This inputFormatter function will convert all the input to lowercase.
-                        TextInputFormatter.withFunction(
-                            (TextEditingValue oldValue,
-                                TextEditingValue newValue) {
+                        TextInputFormatter.withFunction((TextEditingValue oldValue, TextEditingValue newValue) {
                           return newValue.copyWith(
                             text: newValue.text.toLowerCase(),
                             selection: newValue.selection,
@@ -137,8 +132,7 @@ class _AtOnboardingPairScreenState extends State<AtOnboardingPairScreen> {
                       decoration: InputDecoration(
                         fillColor: Colors.blueAccent,
                         errorStyle: const TextStyle(fontSize: 12),
-                        prefixStyle:
-                            TextStyle(color: theme.primaryColor, fontSize: 15),
+                        prefixStyle: TextStyle(color: theme.primaryColor, fontSize: 15),
                         border: OutlineInputBorder(
                           borderSide: BorderSide(
                             color: theme.primaryColor,
@@ -149,8 +143,7 @@ class _AtOnboardingPairScreenState extends State<AtOnboardingPairScreen> {
                             color: Colors.grey[500]!,
                           ),
                         ),
-                        contentPadding: const EdgeInsets.symmetric(
-                            horizontal: AtOnboardingDimens.paddingSmall),
+                        contentPadding: const EdgeInsets.symmetric(horizontal: AtOnboardingDimens.paddingSmall),
                       ),
                     ),
                     const SizedBox(height: 10),
@@ -213,8 +206,7 @@ class _AtOnboardingPairScreenState extends State<AtOnboardingPairScreen> {
       isParing = true;
       setState(() {});
       bool status = false;
-      status =
-          await registerPersona(widget.atSign, _emailController.text, context);
+      status = await registerPersona(widget.atSign, _emailController.text, context);
       isParing = false;
       setState(() {});
       if (status) {
@@ -237,14 +229,11 @@ class _AtOnboardingPairScreenState extends State<AtOnboardingPairScreen> {
     }
   }
 
-  Future<bool> registerPersona(
-      String atsign, String email, BuildContext context,
-      {String? oldEmail}) async {
+  Future<bool> registerPersona(String atsign, String email, BuildContext context, {String? oldEmail}) async {
     dynamic data;
     bool status = false;
     // String atsign;
-    dynamic response = await _freeAtsignService.registerPerson(atsign, email,
-        oldEmail: oldEmail);
+    dynamic response = await _freeAtsignService.registerPerson(atsign, email, oldEmail: oldEmail);
     if (response.statusCode == 200) {
       data = response.body;
       data = jsonDecode(data);
@@ -282,10 +271,8 @@ class _AtOnboardingPairScreenState extends State<AtOnboardingPairScreen> {
             text: TextSpan(
               children: <InlineSpan>[
                 TextSpan(
-                  style: const TextStyle(
-                      color: Colors.black, fontSize: 16, letterSpacing: 0.5),
-                  text:
-                      AtOnboardingLocalizations.current.msg_maximum_atSign_prev,
+                  style: const TextStyle(color: Colors.black, fontSize: 16, letterSpacing: 0.5),
+                  text: AtOnboardingLocalizations.current.msg_maximum_atSign_prev,
                 ),
                 TextSpan(
                     text: 'https://my.atsign.com',
@@ -297,14 +284,12 @@ class _AtOnboardingPairScreenState extends State<AtOnboardingPairScreen> {
                     recognizer: TapGestureRecognizer()
                       ..onTap = () async {
                         String url = 'https://my.atsign.com';
-                        if (!widget.hideReferences &&
-                            await canLaunchUrl(Uri.parse(url))) {
+                        if (!widget.hideReferences && await canLaunchUrl(Uri.parse(url))) {
                           await launchUrl(Uri.parse(url));
                         }
                       }),
                 TextSpan(
-                  text:
-                      AtOnboardingLocalizations.current.msg_maximum_atSign_next,
+                  text: AtOnboardingLocalizations.current.msg_maximum_atSign_next,
                   style: const TextStyle(
                     color: Colors.black,
                     fontSize: 16,
@@ -343,13 +328,11 @@ class _AtOnboardingPairScreenState extends State<AtOnboardingPairScreen> {
     if (result != null && result.secret != null) {
       if (!mounted) return;
       Navigator.pop(context);
-      widget.onGenerateSuccess
-          ?.call(atSign: result.atSign, secret: result.secret ?? '');
+      widget.onGenerateSuccess?.call(atSign: result.atSign, secret: result.secret ?? '');
     } else if (result != null) {
       dynamic data;
       //User choose a difference atsign to onboard
-      dynamic response =
-          await _freeAtsignService.loginWithAtsign(result.atSign);
+      dynamic response = await _freeAtsignService.loginWithAtsign(result.atSign);
       if (response.statusCode == 200) {
         data = response.body;
         data = jsonDecode(data);
@@ -370,8 +353,7 @@ class _AtOnboardingPairScreenState extends State<AtOnboardingPairScreen> {
       if (result2 != null) {
         if (!mounted) return;
         Navigator.pop(context);
-        widget.onGenerateSuccess
-            ?.call(atSign: result2.atSign, secret: result2.secret ?? '');
+        widget.onGenerateSuccess?.call(atSign: result2.atSign, secret: result2.secret ?? '');
       } else {
         if (!mounted) return;
         Navigator.pop(context);

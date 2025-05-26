@@ -2,7 +2,6 @@ import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
 import 'package:at_onboarding_flutter/src/services/onboarding_service.dart';
 import 'package:at_onboarding_flutter/src/utils/at_onboarding_dimens.dart';
 import 'package:at_onboarding_flutter/src/widgets/at_onboarding_button.dart';
-
 import 'package:flutter/material.dart';
 
 /// This screen shows the list of atSign already available for the given email
@@ -20,20 +19,18 @@ class AtOnboardingAccountsScreen extends StatefulWidget {
   final AtOnboardingConfig config;
 
   const AtOnboardingAccountsScreen({
-    Key? key,
+    super.key,
     required this.atsigns,
     this.message,
     this.newAtsign,
     required this.config,
-  }) : super(key: key);
+  });
 
   @override
-  State<AtOnboardingAccountsScreen> createState() =>
-      _AtOnboardingAccountsScreenState();
+  State<AtOnboardingAccountsScreen> createState() => _AtOnboardingAccountsScreenState();
 }
 
-class _AtOnboardingAccountsScreenState
-    extends State<AtOnboardingAccountsScreen> {
+class _AtOnboardingAccountsScreenState extends State<AtOnboardingAccountsScreen> {
   List<String> pairedAtsignsList = [];
   Object? lastSelectedIndex;
   late int greyStartIndex;
@@ -73,9 +70,7 @@ class _AtOnboardingAccountsScreenState
               ? Center(
                   child: Column(
                     children: <Widget>[
-                      CircularProgressIndicator(
-                          valueColor: AlwaysStoppedAnimation<Color>(
-                              theme.primaryColor)),
+                      CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(theme.primaryColor)),
                       Text(
                         AtOnboardingLocalizations.current.loading_atSigns,
                         style: const TextStyle(
@@ -89,8 +84,7 @@ class _AtOnboardingAccountsScreenState
               : Column(
                   children: <Widget>[
                     Text(
-                      widget.message ??
-                          AtOnboardingLocalizations.current.title_select_atSign,
+                      widget.message ?? AtOnboardingLocalizations.current.title_select_atSign,
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: AtOnboardingDimens.fontNormal,
@@ -110,9 +104,7 @@ class _AtOnboardingAccountsScreenState
                         },
                         value: 'new',
                         activeColor: theme.primaryColor,
-                        title: Text('@${widget.newAtsign}',
-                            style:
-                                const TextStyle(fontWeight: FontWeight.bold)),
+                        title: Text('@${widget.newAtsign}', style: const TextStyle(fontWeight: FontWeight.bold)),
                       )
                     ],
                     const Divider(thickness: 0.8),
@@ -121,8 +113,7 @@ class _AtOnboardingAccountsScreenState
                         itemCount: widget.atsigns.length,
                         itemBuilder: (BuildContext context, int index) {
                           String currentItem = '@${widget.atsigns[index]}';
-                          bool isExist =
-                              pairedAtsignsList.contains(currentItem);
+                          bool isExist = pairedAtsignsList.contains(currentItem);
                           return Padding(
                             padding: const EdgeInsets.symmetric(vertical: 2.0),
                             child: RadioListTile<Object>(
@@ -135,8 +126,7 @@ class _AtOnboardingAccountsScreenState
                                         lastSelectedIndex = value;
                                       });
                                       _showAlert(
-                                        widget.atsigns[int.parse(
-                                            lastSelectedIndex.toString())],
+                                        widget.atsigns[int.parse(lastSelectedIndex.toString())],
                                         context,
                                       );
                                     },
@@ -173,15 +163,11 @@ class _AtOnboardingAccountsScreenState
               style: theme.textTheme.bodyLarge,
               children: <InlineSpan>[
                 TextSpan(
-                  text:
-                      AtOnboardingLocalizations.current.title_pair_atSign_prev,
+                  text: AtOnboardingLocalizations.current.title_pair_atSign_prev,
                 ),
+                TextSpan(text: ' $atsign ', style: const TextStyle(fontWeight: FontWeight.bold)),
                 TextSpan(
-                    text: ' $atsign ',
-                    style: const TextStyle(fontWeight: FontWeight.bold)),
-                TextSpan(
-                  text:
-                      AtOnboardingLocalizations.current.title_pair_atSign_next,
+                  text: AtOnboardingLocalizations.current.title_pair_atSign_next,
                 )
               ],
             ),
