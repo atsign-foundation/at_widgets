@@ -17,7 +17,7 @@ class AtOnboardingBackupScreen extends StatefulWidget {
   const AtOnboardingBackupScreen({
     super.key,
     required this.config,
-  }) : super(key: key);
+  });
 
   @override
   State<AtOnboardingBackupScreen> createState() => _AtOnboardingBackupScreenState();
