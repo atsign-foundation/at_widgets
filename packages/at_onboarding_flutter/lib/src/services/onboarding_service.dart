@@ -121,17 +121,19 @@ class OnboardingService {
           await authService.authenticate(atAuthRequest);
       return atAuthResponse.isSuccessful;
     }
+    var req = atOnboardingRequest ?? AtOnboardingRequest(_atsign!);
+    req.appName =
+        (atOnboardingRequest != null && atOnboardingRequest.appName != null)
+            ? atOnboardingRequest.appName
+            : 'system';
+    req.deviceName =
+        (atOnboardingRequest != null && atOnboardingRequest.deviceName != null)
+            ? atOnboardingRequest.deviceName
+            : 'default-device';
     var onboardingResponse = await authService.onboard(
-        AtOnboardingRequest(_atsign!)
-          ..appName = (atOnboardingRequest != null &&
-                  atOnboardingRequest.appName != null)
-              ? atOnboardingRequest.appName
-              : 'system'
-          ..deviceName = (atOnboardingRequest != null &&
-                  atOnboardingRequest.deviceName != null)
-              ? atOnboardingRequest.deviceName
-              : 'default-device',
-        cramSecret: cramSecret);
+      req,
+      cramSecret: cramSecret,
+    );
     _logger.finer('onboardingResponse: $onboardingResponse');
     if (onboardingResponse.isSuccessful) {
       // Initializing "AtClientService" and adding to it map for backward compatibility.
