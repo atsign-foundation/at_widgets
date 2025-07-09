@@ -91,8 +91,28 @@ class OnboardingService {
   }
 
   ///Call this function before start onboarding
-  Future<void> initialSetup({required bool usingSharedStorage}) async {
-    await keyChainManager.initialSetup(useSharedStorage: usingSharedStorage);
+  Future<void> initialSetup({required bool usingSharedStorage, bool forceReset = false}) async {
+    // Only call keyChainManager.initialSetup if there are no existing atSigns
+    // or if explicitly requested to reset (forceReset = true)
+    if (forceReset) {
+      await keyChainManager.initialSetup(useSharedStorage: usingSharedStorage);
+    } else {
+      // Check if there are existing atSigns
+      List<String> existingAtSigns = await keyChainManager.getAtSignListFromKeychain();
+      if (existingAtSigns.isEmpty) {
+        // No existing atSigns, safe to initialize
+        await keyChainManager.initialSetup(useSharedStorage: usingSharedStorage);
+      } else {
+        // Existing atSigns found, only set shared storage preference without clearing data
+        _logger.info('Existing atSigns found (${existingAtSigns.length}), preserving keychain data during onboarding');
+        // Just set the shared storage preference without clearing existing data
+        if (usingSharedStorage) {
+          await keyChainManager.enableUsingSharedStorage();
+        } else {
+          await keyChainManager.disableUsingSharedStorage();
+        }
+      }
+    }
   }
 
   /// To register for a new enrollment request
