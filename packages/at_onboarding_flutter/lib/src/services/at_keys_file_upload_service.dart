@@ -11,10 +11,13 @@ import 'package:file_picker/file_picker.dart';
 
 class AtKeysFileUploadService {
   final AtSignLogger _logger = AtSignLogger('At Onboarding');
-  final OnboardingService _onboardingService = OnboardingService.getInstance();
+  late final OnboardingService _onboardingService;
   final AtOnboardingConfig _config;
   AtKeysFileUploadService({required AtOnboardingConfig config})
-      : _config = config;
+      : _config = config {
+    _onboardingService = OnboardingService.getInstance();
+    _onboardingService.setAtClientPreference = _config.atClientPreference;
+  }
 
   bool get isMobile => Platform.isIOS || Platform.isAndroid;
   Future<String?> pickFile() async {

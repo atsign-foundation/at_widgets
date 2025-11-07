@@ -20,8 +20,6 @@ class OnboardingService {
   }
 
   KeyChainManager keyChainManager = KeyChainManager.getInstance();
-  AtStatusImpl atStatusImpl =
-      AtStatusImpl(rootUrl: AtOnboardingConstants.serverDomain);
   final AtSignLogger _logger = AtSignLogger('Onboarding Service');
 
   // NOTE: The atClientServiceMap which contains the "AtClientService" instance as a value is used by the mobile apps.
@@ -37,15 +35,15 @@ class OnboardingService {
   AtClientPreference _atClientPreference = AtClientPreference();
 
   String? _namespace;
-  Widget? _applogo;
+  Widget? _appLogo;
   bool? _isPkam;
   late Function onboardFunc;
 
   ServerStatus? serverStatus;
 
-  set setLogo(Widget? logo) => _applogo = logo;
+  set setLogo(Widget? logo) => _appLogo = logo;
 
-  Widget? get logo => _applogo;
+  Widget? get logo => _appLogo;
 
   bool? get isPkam => _isPkam;
 
@@ -270,6 +268,9 @@ class OnboardingService {
     return atSignsList;
   }
 
+  AtStatusImpl get atStatusImpl => AtStatusImpl(
+      rootUrl: _atClientPreference.rootDomain,
+      rootPort: _atClientPreference.rootPort);
   Future<ServerStatus?> checkAtSignServerStatus(String atsign) async {
     AtStatus status = await atStatusImpl.get(atsign);
     return status.serverStatus;
