@@ -14,7 +14,7 @@ jobs:
         with:
           channel: "stable"
       - name: Disabled
-        run: Echo "This check has been disabled"
+        run: echo "This check has been disabled"
 #      - name: flutter pub get
 #        run: flutter pub get
 #      - name: Do melos bootstrap
